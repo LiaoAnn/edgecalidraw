@@ -5,8 +5,16 @@ import { cloudflare } from "@cloudflare/vite-plugin";
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react(), cloudflare()],
+  plugins: [
+    react(),
+    cloudflare({
+      inspectorPort: 9230,
+    }),
+  ],
   define: {
     "process.env.NODE_ENV": JSON.stringify("true"),
+  },
+  server: {
+    host: true, // Allow access from other devices on the network
   },
 });
