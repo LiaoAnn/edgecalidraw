@@ -1,4 +1,8 @@
-import { Excalidraw } from "@excalidraw/excalidraw";
+import {
+  Excalidraw,
+  LiveCollaborationTrigger,
+  WelcomeScreen,
+} from "@excalidraw/excalidraw";
 import "@excalidraw/excalidraw/index.css";
 import {
   ExcalidrawImperativeAPI,
@@ -22,6 +26,7 @@ function ExcalidrawComponent() {
 
   const [userId, setUserId] = useState<string | null>(null);
   const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });
+  const [isCollaborating, setIsCollaborating] = useState(false);
 
   // Initialize canvas size and set up resize listener
   useEffect(() => {
@@ -130,7 +135,15 @@ function ExcalidrawComponent() {
           }
         }}
         excalidrawAPI={(api) => setExcalidrawAPI(api)}
-      />
+        renderTopRightUI={() => (
+          <LiveCollaborationTrigger
+            isCollaborating={isCollaborating}
+            onSelect={() => setIsCollaborating(true)}
+          />
+        )}
+      >
+        <WelcomeScreen />
+      </Excalidraw>
     </div>
   );
 }
