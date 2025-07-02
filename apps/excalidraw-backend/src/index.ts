@@ -16,7 +16,7 @@ app.get("/api/get-elements/:drawingId", async (c) => {
   return c.json(ArraySchema.parse(elements));
 });
 
-app.get("api/ws/:drawingId", (c) => {
+app.get("/api/ws/:drawingId", (c) => {
   const drawingId = c.req.param("drawingId");
   const upgradeHeader = c.req.header("Upgrade");
   if (!upgradeHeader || upgradeHeader !== "websocket") {
