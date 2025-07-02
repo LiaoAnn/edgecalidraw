@@ -14,7 +14,7 @@ const rootRoute = createRootRoute({
 
 const excalidrawRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: "/excalidraw/$id",
+  path: "/room/$id",
   component: ExcalidrawComponent,
 });
 

@@ -18,7 +18,7 @@ import { useParams } from "@tanstack/react-router";
 function ExcalidrawComponent() {
   const [excalidrawAPI, setExcalidrawAPI] =
     useState<ExcalidrawImperativeAPI | null>(null);
-  const { id } = useParams({ from: "/excalidraw/$id" });
+  const { id } = useParams({ from: "/room/$id" });
 
   const [userId, setUserId] = useState<string | null>(null);
 
