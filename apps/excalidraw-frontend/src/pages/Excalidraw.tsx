@@ -21,20 +21,24 @@ function ExcalidrawComponent() {
   const { id } = useParams({ from: "/room/$id" });
 
   const [userId, setUserId] = useState<string | null>(null);
+  const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });
 
+  // Initialize canvas size and set up resize listener
   useEffect(() => {
-    // Try to get userId from localStorage first
-    const storedId = localStorage.getItem("userId");
+    // Function to update canvas size based on window size
+    const updateCanvasSize = () => {
+      setCanvasSize({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+    };
 
-    if (storedId) {
-      setUserId(storedId);
-    } else {
-      // Generate a new ID if none exists
-      const id = Math.random().toString(36).substring(2, 15);
-      // Save the ID to localStorage for future use
-      localStorage.setItem("userId", id);
-      setUserId(id);
-    }
+    updateCanvasSize();
+    window.addEventListener("resize", updateCanvasSize);
+
+    return () => {
+      window.removeEventListener("resize", updateCanvasSize);
+    };
   }, []);
 
   useEffect(() => {
@@ -94,7 +98,14 @@ function ExcalidrawComponent() {
   const sendEventViaSocket = useBufferedWebSocket(handleMessage, id);
 
   return (
-    <div className="canvas" style={{ height: "800px", width: "100%" }}>
+    <div
+      className="canvas"
+      style={{
+        height: `${canvasSize.height}px`,
+        width: `${canvasSize.width}px`,
+        position: "relative",
+      }}
+    >
       <Excalidraw
         onPointerUpdate={(payload) => {
           sendEventViaSocket(
