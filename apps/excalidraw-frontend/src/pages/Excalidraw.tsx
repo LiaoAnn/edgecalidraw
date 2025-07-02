@@ -63,8 +63,8 @@ function ExcalidrawComponent() {
   const handlePointerEvent = (event: PointerEvent) => {
     if (excalidrawAPI) {
       const allCollaborators = excalidrawAPI.getAppState().collaborators;
-      const colaborator = new Map(allCollaborators);
-      colaborator.set(event.data.userId as SocketId, {
+      const collaborator = new Map(allCollaborators);
+      collaborator.set(event.data.userId as SocketId, {
         username: event.data.userId,
         pointer: {
           x: event.data.x,
@@ -73,10 +73,10 @@ function ExcalidrawComponent() {
         },
       });
       if (userId) {
-        colaborator.delete(userId as SocketId);
+        collaborator.delete(userId as SocketId);
       }
       excalidrawAPI.updateScene({
-        collaborators: colaborator,
+        collaborators: collaborator,
       });
     }
   };
