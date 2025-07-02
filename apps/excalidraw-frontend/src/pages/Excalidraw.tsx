@@ -12,7 +12,7 @@ import {
   PointerEvent,
   ExcalidrawElementChangeSchema,
   ExcalidrawElementChange,
-} from "@repo/schemas/events";
+} from "@workspace/schemas/events";
 import { useParams } from "@tanstack/react-router";
 
 function ExcalidrawComponent() {
@@ -105,7 +105,7 @@ function ExcalidrawComponent() {
                 x: payload.pointer.x,
                 y: payload.pointer.y,
               },
-            }),
+            })
           );
         }}
         onPointerUp={() => {
@@ -114,7 +114,7 @@ function ExcalidrawComponent() {
               ExcalidrawElementChangeSchema.parse({
                 type: "elementChange",
                 data: excalidrawAPI.getSceneElements(),
-              }),
+              })
             );
           }
         }}

@@ -2,7 +2,7 @@ import { DurableObject } from "cloudflare:workers";
 import {
   BufferEvent,
   ExcalidrawElementChangeSchema,
-} from "@repo/schemas/events";
+} from "@workspace/schemas/events";
 
 export class ExcalidrawWebSocketServer extends DurableObject<Cloudflare> {
   elements: any[] = [];
@@ -27,7 +27,7 @@ export class ExcalidrawWebSocketServer extends DurableObject<Cloudflare> {
 
   async webSocketMessage(
     ws: WebSocket,
-    message: string | ArrayBuffer,
+    message: string | ArrayBuffer
   ): Promise<void> {
     if (message === "setup") {
       ws.send(
@@ -35,8 +35,8 @@ export class ExcalidrawWebSocketServer extends DurableObject<Cloudflare> {
           ExcalidrawElementChangeSchema.parse({
             type: "elementChange",
             data: this.elements,
-          }),
-        ),
+          })
+        )
       );
       return;
     }

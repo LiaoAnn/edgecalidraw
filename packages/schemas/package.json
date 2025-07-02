@@ -1,13 +1,13 @@
 {
-  "name": "@repo/schemas",
+  "name": "@workspace/schemas",
   "version": "1.0.0",
   "type": "module",
   "private": true,
   "author": "quramy",
   "license": "MIT",
-    "exports": {
-      "./events": "./src/events.ts"
-    },
+  "exports": {
+    "./events": "./src/events.ts"
+  },
   "dependencies": {
     "zod": "^3.24.2"
   },

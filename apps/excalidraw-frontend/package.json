@@ -1,5 +1,5 @@
 {
-  "name": "excalidraw-multi-user-state",
+  "name": "excalidraw-frontend",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -16,7 +16,7 @@
     "@tanstack/react-router": "^1.114.22",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "@repo/schemas": "workspace:^"
+    "@workspace/schemas": "workspace:^"
   },
   "devDependencies": {
     "@cloudflare/vite-plugin": "^0.1.11",

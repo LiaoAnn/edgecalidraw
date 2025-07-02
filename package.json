@@ -1,9 +1,13 @@
 {
-  "name": "npm-ts-workspaces-example",
+  "name": "edgecalidraw",
   "private": true,
   "scripts": {},
   "workspaces": [
     "packages/*",
     "apps/*"
-  ]
+  ],
+  "devDependencies": {
+    "typescript": "^5.8.3",
+    "wrangler": "^4.22.0"
+  }
 }

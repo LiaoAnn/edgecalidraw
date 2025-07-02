@@ -1,10 +1,10 @@
 import { useEffect, useRef } from "react";
-import { BufferEvent, BufferEventType } from "@repo/schemas/events";
+import { BufferEvent, BufferEventType } from "@workspace/schemas/events";
 
 const useBufferedWebSocket = (
   handleMessage: (event: BufferEventType) => void,
   id: string,
-  bufferTime = 10,
+  bufferTime = 10
 ) => {
   const bufferedEvents = useRef<Record<string, BufferEventType>>({});
   const socketRef = useRef<WebSocket | null>(null);
