@@ -45,6 +45,9 @@
         "typescript.suggest.autoImports": true,
         "typescript.preferences.importModuleSpecifier": "non-relative",
         "workbench.editor.enablePreview": true,
+        "cSpell.words": [
+          "excalidraw"
+        ]
       }
     }
   },
