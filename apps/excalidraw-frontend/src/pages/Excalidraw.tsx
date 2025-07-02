@@ -70,24 +70,25 @@ function ExcalidrawComponent() {
   };
 
   const handlePointerEvent = (event: PointerEvent) => {
-    if (excalidrawAPI) {
-      const allCollaborators = excalidrawAPI.getAppState().collaborators;
-      const collaborator = new Map(allCollaborators);
-      collaborator.set(event.data.userId as SocketId, {
-        username: event.data.userId,
-        pointer: {
-          x: event.data.x,
-          y: event.data.y,
-          tool: "laser",
-        },
-      });
-      if (userId) {
-        collaborator.delete(userId as SocketId);
-      }
-      excalidrawAPI.updateScene({
-        collaborators: collaborator,
-      });
+    if (!excalidrawAPI) return;
+
+    const allCollaborators = excalidrawAPI.getAppState().collaborators;
+    const collaborator = new Map(allCollaborators);
+    collaborator.set(event.data.userId as SocketId, {
+      username: event.data.userId,
+      pointer: {
+        x: event.data.x,
+        y: event.data.y,
+        tool: "laser",
+      },
+    });
+    if (userId) {
+      collaborator.delete(userId as SocketId);
     }
+    setIsCollaborating(collaborator.size > 1);
+    excalidrawAPI.updateScene({
+      collaborators: collaborator,
+    });
   };
 
   const handleElementChangeEvent = (event: ExcalidrawElementChange) => {
@@ -96,7 +97,6 @@ function ExcalidrawComponent() {
       excalidrawAPI.updateScene({
         elements: event.data,
       });
-      console.log("Element change received:", event.data);
     }
   };
 
@@ -135,6 +135,7 @@ function ExcalidrawComponent() {
           }
         }}
         excalidrawAPI={(api) => setExcalidrawAPI(api)}
+        isCollaborating={isCollaborating}
         renderTopRightUI={() => (
           <LiveCollaborationTrigger
             isCollaborating={isCollaborating}

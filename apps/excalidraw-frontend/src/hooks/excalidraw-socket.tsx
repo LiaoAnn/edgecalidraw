@@ -10,15 +10,15 @@ const useBufferedWebSocket = (
   const socketRef = useRef<WebSocket | null>(null);
 
   useEffect(() => {
-    socketRef.current = new WebSocket(`ws://localhost:8787/api/ws/${id}`);
+    const wsBaseUrl = import.meta.env.PROD
+      ? window.location.origin.replace(/^http/, "ws")
+      : import.meta.env.VITE_WS_BASE_URL;
+    socketRef.current = new WebSocket(`${wsBaseUrl}/api/ws/${id}`);
 
     const socket = socketRef.current;
 
-    console.log("useBufferedWebSocket effect", socket);
-
     if (socket) {
       socket.onmessage = (event) => {
-        console.log("Received event", event);
         handleMessage(BufferEvent.parse(JSON.parse(event.data)));
       };
       socket.onopen = () => {
@@ -34,7 +34,6 @@ const useBufferedWebSocket = (
         Object.keys(bufferedEvents.current).length > 0
       ) {
         for (const key in bufferedEvents.current) {
-          console.log("Sending buffered event", bufferedEvents.current[key]);
           socket.send(JSON.stringify(bufferedEvents.current[key]));
         }
 

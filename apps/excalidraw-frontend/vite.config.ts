@@ -11,9 +11,6 @@ export default defineConfig({
       inspectorPort: 9230,
     }),
   ],
-  define: {
-    "process.env.NODE_ENV": JSON.stringify("true"),
-  },
   server: {
     host: true, // Allow access from other devices on the network
   },
