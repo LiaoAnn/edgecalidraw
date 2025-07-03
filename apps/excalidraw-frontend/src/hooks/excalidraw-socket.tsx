@@ -10,9 +10,10 @@ const useBufferedWebSocket = (
   const socketRef = useRef<WebSocket | null>(null);
 
   useEffect(() => {
-    const wsBaseUrl = import.meta.env.PROD
-      ? window.location.origin.replace(/^http/, "ws")
-      : import.meta.env.VITE_WS_BASE_URL;
+    const baseUrl = import.meta.env.PROD
+      ? window.location.origin
+      : import.meta.env.VITE_SERVER_BASE_URL;
+    const wsBaseUrl = baseUrl.replace(/^http/, "ws");
     socketRef.current = new WebSocket(`${wsBaseUrl}/api/ws/${id}`);
 
     const socket = socketRef.current;
