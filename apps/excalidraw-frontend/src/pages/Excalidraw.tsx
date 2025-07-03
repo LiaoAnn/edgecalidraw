@@ -16,6 +16,8 @@ import {
   PointerEvent,
   ExcalidrawElementChangeSchema,
   ExcalidrawElementChange,
+  UserJoinEvent,
+  UserLeaveEvent,
 } from "@workspace/schemas/events";
 import { useParams } from "@tanstack/react-router";
 
@@ -66,6 +68,10 @@ function ExcalidrawComponent() {
       handlePointerEvent(event);
     } else if (event.type === "elementChange") {
       handleElementChangeEvent(event);
+    } else if (event.type === "userJoin") {
+      handleUserJoinEvent(event);
+    } else if (event.type === "userLeave") {
+      handleUserLeaveEvent(event);
     }
   };
 
@@ -98,6 +104,30 @@ function ExcalidrawComponent() {
         elements: event.data,
       });
     }
+  };
+
+  const handleUserJoinEvent = (event: UserJoinEvent) => {
+    console.log("User joined:", event.data.userId);
+    // The user is added to collaborators when they send pointer events
+    // This is just for logging purposes
+  };
+
+  const handleUserLeaveEvent = (event: UserLeaveEvent) => {
+    if (!excalidrawAPI) return;
+
+    console.log("User left:", event.data.userId);
+    const allCollaborators = excalidrawAPI.getAppState().collaborators;
+    const collaborator = new Map(allCollaborators);
+
+    // Remove the user from collaborators
+    collaborator.delete(event.data.userId as SocketId);
+
+    // Update collaboration state
+    setIsCollaborating(collaborator.size > 0);
+
+    excalidrawAPI.updateScene({
+      collaborators: collaborator,
+    });
   };
 
   const sendEventViaSocket = useBufferedWebSocket(handleMessage, id);

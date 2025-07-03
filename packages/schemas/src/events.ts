@@ -15,14 +15,33 @@ export const ExcalidrawElementChangeSchema = z.object({
   data: z.array(z.any()),
 });
 
+// Add user join/leave events
+export const UserJoinEventSchema = z.object({
+  type: z.literal("userJoin"),
+  data: z.object({
+    userId: z.string(),
+  }),
+});
+
+export const UserLeaveEventSchema = z.object({
+  type: z.literal("userLeave"),
+  data: z.object({
+    userId: z.string(),
+  }),
+});
+
 export type PointerEvent = z.infer<typeof PointerEventSchema>;
 export type ExcalidrawElementChange = z.infer<
   typeof ExcalidrawElementChangeSchema
 >;
+export type UserJoinEvent = z.infer<typeof UserJoinEventSchema>;
+export type UserLeaveEvent = z.infer<typeof UserLeaveEventSchema>;
 
 export const BufferEvent = z.union([
   PointerEventSchema,
   ExcalidrawElementChangeSchema,
+  UserJoinEventSchema,
+  UserLeaveEventSchema,
 ]);
 
 export type BufferEventType = z.infer<typeof BufferEvent>;
