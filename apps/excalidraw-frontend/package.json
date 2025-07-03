@@ -14,13 +14,11 @@
   "dependencies": {
     "@excalidraw/excalidraw": "^0.18.0",
     "@tanstack/react-router": "^1.114.22",
+    "@workspace/schemas": "workspace:^",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "@workspace/schemas": "workspace:^"
+    "react-dom": "^18.3.1"
   },
   "devDependencies": {
-    "@cloudflare/vite-plugin": "^0.1.11",
-    "@cloudflare/workers-types": "^4.20250313.0",
     "@eslint/js": "^9.17.0",
     "@types/react": "^18.3.18",
     "@types/react-dom": "^18.3.5",
