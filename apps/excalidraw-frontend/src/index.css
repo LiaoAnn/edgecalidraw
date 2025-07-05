@@ -1,6 +1,20 @@
 @import "tailwindcss";
 
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Noto Sans TC", "Noto Sans", sans-serif;
+}
+
 .canvas {
   width: 1000px;
   height: 1000px;
+}
+
+:root {
+  --font-sans: "Noto Sans TC", "Noto Sans", sans-serif;
 }
