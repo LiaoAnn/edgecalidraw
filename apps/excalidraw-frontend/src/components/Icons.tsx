@@ -32,7 +32,7 @@ export const createIcon = (
   );
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+// @ts-expect-error tablerIconProps is declared but its value is never read.
 const tablerIconProps: Opts = {
   width: 24,
   height: 24,
