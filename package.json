@@ -1,7 +1,10 @@
 {
   "name": "edgecalidraw",
   "private": true,
-  "scripts": {},
+  "scripts": {
+    "build": "pnpm --filter excalidraw-frontend run build",
+    "deploy": "pnpm --filter excalidraw-backend run db:apply --remote && pnpm --filter excalidraw-backend run deploy"
+  },
   "workspaces": [
     "packages/*",
     "apps/*"
