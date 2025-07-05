@@ -1,88 +1,47 @@
-# Excalidraw Multi-User App
+# Edgecalidraw
 
-[![Watch the demo video](https://img.youtube.com/vi/FgWVoryZ8PU/0.jpg)](https://youtu.be/FgWVoryZ8PU?si=XbUy-88CP2OI3psK)
+[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/LiaoAnn/edgecalidraw)
 
-## Project Overview
+This repo is inspired by [backpine/learn-durable-objects](https://github.com/backpine/learn-durable-objects), and is a rewrite of it with additional features such as a "room list" for managing multiple drawing rooms, and enhanced real-time collaboration experience based on previous work.
 
-This project is a real-time collaborative drawing application built with Excalidraw that allows multiple users to draw together simultaneously. The application leverages WebSockets for bidirectional communication, enabling users to see each other's cursor movements and drawing changes in real-time without page refreshes.
+## Features
 
-Key features include:
+### Room Management
 
-- Real-time collaboration via WebSockets connections
-- Live cursor position tracking across multiple clients
-- Synchronized drawing elements between users
-- Persistent state management with Cloudflare Durable Objects
+The backend provides a room list feature that allows users to create, delete, and manage drawing rooms. Each room is represented by a unique ID and can be accessed by multiple users simultaneously.
 
-The architecture uses Cloudflare's infrastructure to manage WebSocket connections efficiently, broadcasting updates between clients and maintaining drawing state across sessions.
+### Real-time Collaboration
 
-This project consists of two applications:
+After creating a room, you can share the URL with others to collaborate in real-time. The backend uses WebSocket connections to synchronize drawing actions between users, ensuring a smooth collaborative experience.
 
-1. A backend service (excalidraw-backend) built with Cloudflare Workers and Durable Objects
-2. A frontend application (excalidraw-multi-user-state) built with React and Excalidraw
+## Deployment
 
-## Prerequisites
+You can click the "Deploy to Cloudflare" button above to deploy this project directly to your Cloudflare account.
 
-- Node.js (v18 or later recommended)
-- pnpm (for workspace management)
-- Cloudflare account with Workers subscription (for deployment)
+Ensure you have connected your Cloudflare account to your GitHub account, and have the necessary permissions to deploy Workers.
 
-## Setup
+After that, you will see the deployment configuration page. You can re-name the project and database name if you want.
 
-First, install dependencies at the workspace root:
+![Pre-deployment Screenshot](./docs/pre-deployment.png)
 
-```bash
-# Install all dependencies across the workspace
-pnpm install
+Now you click **Create and deploy** button to start the deployment process. This will take a few minutes to complete, as it will set up the Cloudflare Worker, Durable Objects, and the SQLite database automatically.
+
+After the deployment is complete, you have to set the `SYSTEM_PASSWORD` environment variable in the Cloudflare Workers dashboard. This is used to authenticate the admin user for the room list. Just go to the **Settings** tab, scroll down to the **Variables and Secrets** section, and add a new variable with the name `SYSTEM_PASSWORD` and a strong password as the value.
+
+![System Password Screenshot](./docs/system-password-env.png)
+
+Click the **Deploy** button to apply the changes. Congratulations! You have successfully deployed Edgecalidraw, you can now access the application at the URL provided in the dashboard. 🎉
+
+## Development
+
+You can use Dev Container to develop this project. Just open the project in VS Code, and it will prompt you to reopen in Dev Container.
+
+If you facing the pnpm permission issue, it maybe caused by the Dev Container's settings.
+
+```json
+  "mounts": [
+    "source=pnpm_store,target=/home/node/.pnpm-store,type=volume"
+  ],
 ```
 
-## Backend Setup (excalidraw-backend)
-
-### Local Development
-
-```bash
-# Generate Cloudflare types
-pnpm --filter excalidraw-backend run cf-typegen
-
-# Start the development server
-pnpm --filter excalidraw-backend run dev
-```
-
-### Deployment
-
-```bash
-# Deploy to Cloudflare Workers
-pnpm --filter excalidraw-backend run deploy
-```
-
-## Frontend Setup (excalidraw-multi-user-state)
-
-### Local Development
-
-```bash
-# Generate Cloudflare types
-pnpm --filter excalidraw-multi-user-state run cf-typegen
-
-# Start the development server
-pnpm --filter excalidraw-multi-user-state run dev
-```
-
-### Building and Previewing
-
-```bash
-# Build the application
-pnpm --filter excalidraw-multi-user-state run build
-
-# Preview the built application
-pnpm --filter excalidraw-multi-user-state run preview
-```
-
-### Deployment
-
-```bash
-# Deploy to Cloudflare Pages
-pnpm --filter excalidraw-multi-user-state run deploy
-```
-
-## Schemas
-
-Both applications use shared schemas from the `@workspace/schemas` package, which ensures type safety and consistency between the frontend and backend. This is managed within the pnpm workspace.
+You can remove the `mounts` section in `.devcontainer/devcontainer.json` file, and then rebuild the Dev Container.
