@@ -69,7 +69,7 @@ function generateRoomId(title: string): string {
 const app = new Hono<{ Bindings: CloudflareBindings }>();
 
 // 新增：獲取所有房間列表的 API
-app.get("/api/rooms", async (c) => {
+app.get("/", async (c) => {
   // 按最後活動時間降序排列
   const sortedRooms = [...rooms].sort(
     (a, b) =>
@@ -80,7 +80,7 @@ app.get("/api/rooms", async (c) => {
 });
 
 // 新增：創建房間的 API
-app.post("/api/rooms", async (c) => {
+app.post("/", async (c) => {
   try {
     const body = await c.req.json();
     const title = body.title;
@@ -118,7 +118,7 @@ app.post("/api/rooms", async (c) => {
 });
 
 // 新增：更新房間活動時間的 API
-app.patch("/api/rooms/:roomId/activity", async (c) => {
+app.patch("//:roomId/activity", async (c) => {
   try {
     const roomId = c.req.param("roomId");
     const roomIndex = rooms.findIndex((room) => room.id === roomId);
@@ -141,7 +141,7 @@ app.patch("/api/rooms/:roomId/activity", async (c) => {
 });
 
 // 新增：更新房間參與人數的 API
-app.patch("/api/rooms/:roomId/participants", async (c) => {
+app.patch("//:roomId/participants", async (c) => {
   try {
     const roomId = c.req.param("roomId");
     const body = await c.req.json();
