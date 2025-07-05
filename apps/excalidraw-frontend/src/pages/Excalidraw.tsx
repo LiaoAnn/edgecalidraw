@@ -58,12 +58,25 @@ function ExcalidrawComponent() {
       setUserId(storedId);
     } else {
       // Generate a new ID if none exists
-      const id = Math.random().toString(36).substring(2, 15);
+      const newId = Math.random().toString(36).substring(2, 15);
       // Save the ID to localStorage for future use
-      localStorage.setItem("userId", id);
-      setUserId(id);
+      localStorage.setItem("userId", newId);
+      setUserId(newId);
     }
-  }, []);
+
+    // 當進入房間時，更新房間的最後活動時間
+    const updateRoomActivity = async () => {
+      try {
+        await fetch(`/api/rooms/${id}/activity`, {
+          method: "PATCH",
+        });
+      } catch (error) {
+        console.log("Could not update room activity:", error);
+      }
+    };
+
+    updateRoomActivity();
+  }, [id]);
 
   const handleMessage = (event: BufferEventType) => {
     if (event.type === "pointer") {

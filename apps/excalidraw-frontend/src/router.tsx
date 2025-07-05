@@ -6,10 +6,17 @@ import {
 } from "@tanstack/react-router";
 
 import ExcalidrawComponent from "./pages/Excalidraw";
+import HomePage from "./pages/HomePage";
 
 // Define the root route
 const rootRoute = createRootRoute({
   component: () => <Outlet />,
+});
+
+const indexRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/",
+  component: HomePage,
 });
 
 const excalidrawRoute = createRoute({
@@ -19,7 +26,7 @@ const excalidrawRoute = createRoute({
 });
 
 // Define route tree
-const routeTree = rootRoute.addChildren([excalidrawRoute]);
+const routeTree = rootRoute.addChildren([indexRoute, excalidrawRoute]);
 
 // Create router instance
 const router = createRouter({ routeTree });
