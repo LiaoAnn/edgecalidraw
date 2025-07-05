@@ -2,11 +2,13 @@ import { Hono } from "hono";
 export { ExcalidrawWebSocketServer } from "./durable-object";
 import { z } from "zod";
 import room from "./routes/room";
+import auth from "./routes/auth";
 
 const app = new Hono<{ Bindings: CloudflareBindings }>();
 
 // external routes
 app.route("/api/rooms", room);
+app.route("/api/auth", auth);
 
 app.get("/api/get-elements/:drawingId", async (c) => {
   const ArraySchema = z.object({

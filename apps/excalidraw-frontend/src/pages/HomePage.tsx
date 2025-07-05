@@ -30,6 +30,11 @@ function HomePage() {
     fetchRooms();
   }, []);
 
+  const logout = () => {
+    localStorage.removeItem("auth_token");
+    navigate({ to: "/login" });
+  };
+
   const fetchRooms = async () => {
     try {
       setLoading(true);
@@ -140,7 +145,13 @@ function HomePage() {
 
   return (
     <div className="max-w-6xl mx-auto px-8 py-8 font-sans">
-      <header className="text-center mb-12">
+      <header className="text-center mb-12 relative">
+        <button
+          onClick={logout}
+          className="absolute top-0 right-0 bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+        >
+          登出
+        </button>
         <h1 className="text-5xl font-bold mb-2 bg-gradient-to-br from-indigo-500 to-purple-600 bg-clip-text text-transparent">
           EdgeCalidraw
         </h1>
