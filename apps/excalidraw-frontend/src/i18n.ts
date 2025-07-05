@@ -22,7 +22,7 @@ i18n.use(initReactI18next).init({
     "zh-TW": {
       translation: zhTWTrans,
     },
-    "en-US": {
+    en: {
       translation: enUSTrans,
     },
   },

@@ -10,7 +10,6 @@ import {
   SocketId,
 } from "@excalidraw/excalidraw/types";
 import { useEffect, useState } from "react";
-import { Link } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import useBufferedWebSocket from "@/hooks/excalidraw-socket";
 import {
@@ -25,6 +24,9 @@ import {
 import { useParams } from "@tanstack/react-router";
 import RoomNotFound from "@/components/RoomNotFound";
 import { Theme } from "@excalidraw/excalidraw/element/types";
+import { ArrowLeftIcon } from "@/components/Icons";
+import { t } from "i18next";
+import { useNavigate } from "@tanstack/react-router";
 
 function getTheme(theme: Theme | "system"): Theme {
   if (theme !== "system") return theme;
@@ -55,6 +57,9 @@ function LoadingRoom() {
 }
 
 function ExcalidrawComponent() {
+  const { i18n } = useTranslation();
+  const navigate = useNavigate();
+
   const [excalidrawAPI, setExcalidrawAPI] =
     useState<ExcalidrawImperativeAPI | null>(null);
   const { id } = useParams({ from: "/room/$id" });
@@ -234,6 +239,7 @@ function ExcalidrawComponent() {
       <Excalidraw
         excalidrawAPI={(api) => setExcalidrawAPI(api)}
         isCollaborating={isCollaborating}
+        langCode={i18n.language}
         onPointerUpdate={(payload) => {
           sendEventViaSocket(
             PointerEventSchema.parse({
@@ -265,28 +271,13 @@ function ExcalidrawComponent() {
       >
         <MainMenu>
           <MainMenu.ItemCustom>
-            <Link
-              to="/"
-              style={{
-                padding: "8px 8px",
-                backgroundColor: "#f0f0f0",
-                color: "#333",
-                textDecoration: "none",
-                borderRadius: "4px",
-                fontSize: "14px",
-                fontWeight: "500",
-                border: "1px solid #ddd",
-                transition: "all 0.2s ease",
-              }}
-              onMouseOver={(e) => {
-                e.currentTarget.style.backgroundColor = "#e0e0e0";
-              }}
-              onMouseOut={(e) => {
-                e.currentTarget.style.backgroundColor = "#f0f0f0";
-              }}
+            <MainMenu.Item
+              icon={ArrowLeftIcon}
+              onSelect={() => navigate({ to: "/" })}
+              aria-label={t("__error.__back_to_home")}
             >
-              ←
-            </Link>
+              {t("__error.__back_to_home")}
+            </MainMenu.Item>
           </MainMenu.ItemCustom>
           <MainMenu.DefaultItems.LoadScene />
           <MainMenu.DefaultItems.SaveToActiveFile />

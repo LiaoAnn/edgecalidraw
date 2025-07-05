@@ -9,7 +9,7 @@ const LanguageSwitch = ({ className = "" }: LanguageSwitchProps) => {
 
   const languages = [
     { code: "zh-TW", label: "繁體中文", flag: "🇹🇼" },
-    { code: "en-US", label: "English", flag: "🇺🇸" },
+    { code: "en", label: "English", flag: "🇺🇸" },
   ];
 
   const currentLanguage =
