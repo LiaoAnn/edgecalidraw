@@ -1,12 +1,16 @@
 import { Hono } from "hono";
 export { ExcalidrawWebSocketServer } from "./durable-object";
+export { RoomManager } from "./room-manager";
 import { z } from "zod";
+import room from "./routes/room";
 
 const ArraySchema = z.object({
   data: z.array(z.any()),
 });
 
 const app = new Hono<{ Bindings: CloudflareBindings }>();
+
+app.route("/api/rooms", room);
 
 app.get("/api/get-elements/:drawingId", async (c) => {
   const drawingId = c.req.param("drawingId");
