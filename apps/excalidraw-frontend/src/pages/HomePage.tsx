@@ -153,7 +153,7 @@ function HomePage() {
           登出
         </button>
         <h1 className="text-5xl font-bold mb-2 bg-gradient-to-br from-indigo-500 to-purple-600 bg-clip-text text-transparent">
-          EdgeCalidraw
+          Edgecalidraw
         </h1>
         <p className="text-xl text-gray-600 m-0">協作式繪圖平台</p>
       </header>

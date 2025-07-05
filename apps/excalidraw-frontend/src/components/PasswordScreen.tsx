@@ -60,7 +60,7 @@ const PasswordScreen = () => {
         <div className="bg-white rounded-2xl shadow-xl p-8">
           <div className="text-center mb-8">
             <h1 className="text-4xl font-bold mb-2 bg-gradient-to-br from-indigo-500 to-purple-600 bg-clip-text text-transparent">
-              EdgeCalidraw
+              Edgecalidraw
             </h1>
             <p className="text-gray-600">請輸入系統密碼以訪問管理界面</p>
           </div>
