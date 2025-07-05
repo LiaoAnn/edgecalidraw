@@ -5,8 +5,8 @@ import {
   Outlet,
 } from "@tanstack/react-router";
 
-import ExcalidrawComponent from "./pages/Excalidraw";
-import HomePage from "./pages/HomePage";
+import ExcalidrawComponent from "@/pages/Excalidraw";
+import HomePage from "@/pages/HomePage";
 
 // Define the root route
 const rootRoute = createRootRoute({

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
-import CreateRoomModal from "../components/CreateRoomModal";
+import CreateRoomModal from "@/components/CreateRoomModal";
 
 interface Room {
   id: string;

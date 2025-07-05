@@ -11,7 +11,7 @@ import {
 } from "@excalidraw/excalidraw/types";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
-import useBufferedWebSocket from "../hooks/excalidraw-socket";
+import useBufferedWebSocket from "@/hooks/excalidraw-socket";
 import {
   BufferEventType,
   PointerEventSchema,
