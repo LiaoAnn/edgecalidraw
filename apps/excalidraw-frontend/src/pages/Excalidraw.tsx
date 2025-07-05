@@ -1,6 +1,7 @@
 import {
   Excalidraw,
   LiveCollaborationTrigger,
+  MainMenu,
   WelcomeScreen,
 } from "@excalidraw/excalidraw";
 import "@excalidraw/excalidraw/index.css";
@@ -9,6 +10,7 @@ import {
   SocketId,
 } from "@excalidraw/excalidraw/types";
 import { useEffect, useState } from "react";
+import { Link } from "@tanstack/react-router";
 import useBufferedWebSocket from "../hooks/excalidraw-socket";
 import {
   BufferEventType,
@@ -173,6 +175,41 @@ function ExcalidrawComponent() {
           />
         )}
       >
+        <MainMenu>
+          <MainMenu.ItemCustom>
+            <Link
+              to="/"
+              style={{
+                padding: "8px 8px",
+                backgroundColor: "#f0f0f0",
+                color: "#333",
+                textDecoration: "none",
+                borderRadius: "4px",
+                fontSize: "14px",
+                fontWeight: "500",
+                border: "1px solid #ddd",
+                transition: "all 0.2s ease",
+              }}
+              onMouseOver={(e) => {
+                e.currentTarget.style.backgroundColor = "#e0e0e0";
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.backgroundColor = "#f0f0f0";
+              }}
+            >
+              ←
+            </Link>
+          </MainMenu.ItemCustom>
+          <MainMenu.DefaultItems.LoadScene />
+          <MainMenu.DefaultItems.SaveToActiveFile />
+          <MainMenu.DefaultItems.Export />
+          <MainMenu.DefaultItems.SaveAsImage />
+          <MainMenu.DefaultItems.SearchMenu />
+          <MainMenu.DefaultItems.Help />
+          <MainMenu.DefaultItems.ClearCanvas />
+          <MainMenu.Separator />
+          <MainMenu.DefaultItems.ChangeCanvasBackground />
+        </MainMenu>
         <WelcomeScreen />
       </Excalidraw>
     </div>
