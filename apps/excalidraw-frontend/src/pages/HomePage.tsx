@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
 import CreateRoomModal from "../components/CreateRoomModal";
-import "./HomePage.css";
 
 interface Room {
   id: string;
@@ -85,58 +84,66 @@ function HomePage() {
 
   if (loading) {
     return (
-      <div className="home-container">
-        <div className="loading">載入中...</div>
+      <div className="max-w-6xl mx-auto px-8 py-8 font-sans">
+        <div className="text-center py-12 text-xl text-gray-600">載入中...</div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="home-container">
-        <div className="error">錯誤: {error}</div>
+      <div className="max-w-6xl mx-auto px-8 py-8 font-sans">
+        <div className="text-center py-12 text-xl text-red-600">
+          錯誤: {error}
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="home-container">
-      <header className="home-header">
-        <h1>EdgeCalidraw</h1>
-        <p>協作式繪圖平台</p>
+    <div className="max-w-6xl mx-auto px-8 py-8 font-sans">
+      <header className="text-center mb-12">
+        <h1 className="text-5xl font-bold mb-2 bg-gradient-to-br from-indigo-500 to-purple-600 bg-clip-text text-transparent">
+          EdgeCalidraw
+        </h1>
+        <p className="text-xl text-gray-600 m-0">協作式繪圖平台</p>
       </header>
 
-      <div className="actions">
-        <button className="create-room-btn" onClick={createNewRoom}>
+      <div className="flex justify-center mb-12">
+        <button
+          className="bg-gradient-to-br from-indigo-500 to-purple-600 text-white border-none px-8 py-4 text-lg font-semibold rounded-lg cursor-pointer transition-all duration-300 shadow-lg shadow-indigo-500/30 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-indigo-500/40"
+          onClick={createNewRoom}
+        >
           建立新畫布
         </button>
       </div>
 
       <div className="rooms-section">
-        <h2>所有畫布</h2>
+        <h2 className="text-3xl font-semibold mb-6 text-gray-800">所有畫布</h2>
         {rooms.length === 0 ? (
-          <div className="no-rooms">
-            <p>目前沒有任何畫布</p>
-            <p>點擊上方按鈕建立你的第一個畫布！</p>
+          <div className="text-center py-12 text-gray-600">
+            <p className="text-lg mb-2">目前沒有任何畫布</p>
+            <p className="text-lg">點擊上方按鈕建立你的第一個畫布！</p>
           </div>
         ) : (
-          <div className="rooms-grid">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {rooms.map((room) => (
               <Link
                 key={room.id}
                 to="/room/$id"
                 params={{ id: room.id }}
-                className="room-card"
+                className="bg-white border border-gray-200 rounded-xl p-6 no-underline text-inherit transition-all duration-300 shadow-sm hover:-translate-y-1 hover:shadow-lg hover:border-indigo-500"
               >
-                <div className="room-header">
-                  <h3>{room.name}</h3>
-                  <span className="participant-count">
-                    {room.participantCount} 人
-                  </span>
+                <div className="flex justify-between items-start mb-4 flex-col sm:flex-row sm:gap-4">
+                  <h3 className="text-xl font-semibold m-0 text-gray-800 flex-1">
+                    {room.name}
+                  </h3>
                 </div>
-                <div className="room-meta">
-                  <p>建立時間: {formatDate(room.createdAt)}</p>
-                  <p>最後活動: {formatDate(room.lastActivity)}</p>
+                <div className="text-gray-600 text-sm">
+                  <p className="my-1">建立時間: {formatDate(room.createdAt)}</p>
+                  <p className="my-1">
+                    最後活動: {formatDate(room.lastActivity)}
+                  </p>
                 </div>
               </Link>
             ))}

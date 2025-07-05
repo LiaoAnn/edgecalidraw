@@ -1,5 +1,4 @@
 import { useState } from "react";
-import "./CreateRoomModal.css";
 
 interface CreateRoomModalProps {
   isOpen: boolean;
@@ -39,12 +38,20 @@ function CreateRoomModal({
   };
 
   return (
-    <div className="modal-overlay" onClick={handleClose}>
-      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-        <div className="modal-header">
-          <h2>建立新畫布</h2>
+    <div
+      className="fixed inset-0 bg-black/60 flex justify-center items-center z-[1000] backdrop-blur-sm"
+      onClick={handleClose}
+    >
+      <div
+        className="bg-white rounded-xl w-[90%] max-w-md max-h-[90vh] overflow-y-auto shadow-2xl animate-in fade-in slide-in-from-bottom-2 duration-300"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex justify-between items-center px-8 py-6 border-b border-gray-200">
+          <h2 className="m-0 text-2xl font-semibold text-gray-800">
+            建立新畫布
+          </h2>
           <button
-            className="close-button"
+            className="bg-none border-none text-2xl text-gray-600 cursor-pointer p-0 w-8 h-8 flex items-center justify-center rounded-md transition-all duration-200 hover:bg-gray-100 hover:text-gray-800 disabled:opacity-50 disabled:cursor-not-allowed"
             onClick={handleClose}
             disabled={isCreating}
           >
@@ -52,9 +59,14 @@ function CreateRoomModal({
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="modal-form">
-          <div className="form-group">
-            <label htmlFor="room-title">畫布標題</label>
+        <form onSubmit={handleSubmit} className="p-8">
+          <div className="mb-6">
+            <label
+              htmlFor="room-title"
+              className="block mb-2 font-medium text-gray-800 text-sm"
+            >
+              畫布標題
+            </label>
             <input
               id="room-title"
               type="text"
@@ -65,14 +77,17 @@ function CreateRoomModal({
               required
               disabled={isCreating}
               autoFocus
+              className="w-full px-3 py-3 border-2 border-gray-200 rounded-lg text-base transition-all duration-200 box-border focus:outline-none focus:border-indigo-500 focus:shadow-[0_0_0_3px_rgba(102,126,234,0.1)] disabled:bg-gray-50 disabled:text-gray-500 disabled:cursor-not-allowed"
             />
-            <div className="input-hint">標題將用於生成房間 ID，支援中英文</div>
+            <div className="mt-2 text-sm text-gray-600">
+              標題將用於生成房間 ID，支援中英文
+            </div>
           </div>
 
-          <div className="modal-actions">
+          <div className="flex gap-4 justify-end mt-8">
             <button
               type="button"
-              className="cancel-button"
+              className="px-6 py-3 rounded-lg text-sm font-medium cursor-pointer transition-all duration-200 border-none min-w-[100px] bg-gray-100 text-gray-800 border border-gray-300 hover:bg-gray-200 disabled:opacity-60 disabled:cursor-not-allowed"
               onClick={handleClose}
               disabled={isCreating}
             >
@@ -80,7 +95,7 @@ function CreateRoomModal({
             </button>
             <button
               type="submit"
-              className="create-button"
+              className="px-6 py-3 rounded-lg text-sm font-medium cursor-pointer transition-all duration-200 border-none min-w-[100px] bg-gradient-to-br from-indigo-500 to-purple-600 text-white shadow-lg shadow-indigo-500/30 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-indigo-500/40 disabled:opacity-60 disabled:cursor-not-allowed disabled:transform-none"
               disabled={!title.trim() || isCreating}
             >
               {isCreating ? "創建中..." : "創建畫布"}
