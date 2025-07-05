@@ -22,32 +22,47 @@
         "bradlc.vscode-tailwindcss",
         "wayou.vscode-todo-highlight",
         "esbenp.prettier-vscode",
+        "Lokalise.i18n-ally"
       ],
       "settings": {
+        // basic editor settings
         "editor.bracketPairColorization.enabled": true,
-        "editor.guides.bracketPairs": true,
-        "editor.insertSpaces": true,
-        "editor.tabSize": 2,
-        "editor.formatOnPaste": true,
-        "editor.formatOnSave": true,
-        "editor.defaultFormatter": "esbenp.prettier-vscode",
         "editor.codeActionsOnSave": {
           "source.fixAll": "explicit"
         },
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.formatOnPaste": true,
+        "editor.formatOnSave": true,
+        "editor.guides.bracketPairs": true,
+        "editor.insertSpaces": true,
+        "editor.tabSize": 2,
         "javascript.format.insertSpaceBeforeFunctionParenthesis": true,
         "javascript.format.placeOpenBraceOnNewLineForControlBlocks": false,
         "javascript.format.placeOpenBraceOnNewLineForFunctions": false,
+        "javascript.preferences.importModuleSpecifier": "non-relative",
+        "javascript.suggest.autoImports": true,
         "typescript.format.insertSpaceBeforeFunctionParenthesis": true,
         "typescript.format.placeOpenBraceOnNewLineForControlBlocks": false,
         "typescript.format.placeOpenBraceOnNewLineForFunctions": false,
-        "javascript.suggest.autoImports": true,
-        "javascript.preferences.importModuleSpecifier": "non-relative",
-        "typescript.suggest.autoImports": true,
         "typescript.preferences.importModuleSpecifier": "non-relative",
+        "typescript.suggest.autoImports": true,
         "workbench.editor.enablePreview": true,
+        // extension settings
         "cSpell.words": [
-          "excalidraw"
-        ]
+          "excalidraw",
+          "edgecalidraw"
+        ],
+        "i18n-ally.keystyle": "nested",
+        "i18n-ally.localesPaths": [
+          "apps/**/src/locales"
+        ],
+        "i18n-ally.enabledFrameworks": [
+          "react",
+          "react-i18next"
+        ],
+        "i18n-ally.sourceLanguage": "zh-tw",
+        "i18n-ally.displayLanguage": "zh-tw",
+        "i18n-ally.pathMatcher": "{locale}.json"
       }
     }
   },
