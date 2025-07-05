@@ -37,7 +37,8 @@
     {
       "binding": "DB",
       "database_name": "edgecalidraw-db",
-      "database_id": "8624e44c-0706-4935-8658-8ae17d1c488a"
+      "database_id": "8624e44c-0706-4935-8658-8ae17d1c488a",
+      "migrations_dir": "apps/excalidraw-backend/migrations",
     }
   ]
 }

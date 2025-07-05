@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "build": "pnpm --filter excalidraw-frontend run build",
-    "deploy": "pnpm --filter excalidraw-backend run db:apply --remote && pnpm --filter excalidraw-backend run deploy"
+    "deploy": "pnpm --filter excalidraw-backend run db:apply --remote -c ../../wrangler.jsonc && pnpm --filter excalidraw-backend run deploy -c ../../wrangler.jsonc"
   },
   "workspaces": [
     "packages/*",
