@@ -4,15 +4,19 @@
   "scripts": {
     "dev": "wrangler dev",
     "deploy": "wrangler deploy --minify",
-    "cf-typegen": "wrangler types --env-interface CloudflareBindings"
+    "cf-typegen": "wrangler types --env-interface CloudflareBindings",
+    "db:generate": "drizzle-kit generate",
+    "db:apply": "wrangler d1 migrations apply edgecalidraw-db"
   },
   "dependencies": {
+    "@workspace/schemas": "workspace:^",
+    "drizzle-orm": "^0.44.2",
     "hono": "^4.7.5",
-    "zod": "^3.24.2",
-    "@workspace/schemas": "workspace:^"
+    "zod": "^3.24.2"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20250321.0",
+    "drizzle-kit": "^0.31.4",
     "wrangler": "^4.4.0"
   }
 }

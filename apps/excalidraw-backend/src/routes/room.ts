@@ -1,45 +1,7 @@
 import { Hono } from "hono";
-
-// 房間數據結構
-interface Room {
-  id: string;
-  name: string;
-  createdAt: string;
-  lastActivity: string;
-  participantCount: number;
-}
-
-// 記憶體中的房間存儲（在實際應用中應該使用數據庫或 Durable Objects）
-let rooms: Room[] = [
-  {
-    id: "design-meeting",
-    name: "設計討論室",
-    createdAt: "2025-07-04T10:00:00Z",
-    lastActivity: "2025-07-04T12:30:00Z",
-    participantCount: 3,
-  },
-  {
-    id: "product-planning",
-    name: "產品規劃",
-    createdAt: "2025-07-04T09:15:00Z",
-    lastActivity: "2025-07-04T11:45:00Z",
-    participantCount: 5,
-  },
-  {
-    id: "architecture-design",
-    name: "架構設計",
-    createdAt: "2025-07-03T14:20:00Z",
-    lastActivity: "2025-07-04T10:15:00Z",
-    participantCount: 2,
-  },
-  {
-    id: "brainstorming",
-    name: "腦力激盪",
-    createdAt: "2025-07-04T08:30:00Z",
-    lastActivity: "2025-07-04T09:00:00Z",
-    participantCount: 1,
-  },
-];
+import { drizzle } from "drizzle-orm/d1";
+import { room } from "../db/schema";
+import { eq, desc } from "drizzle-orm";
 
 // 輔助函數：從標題中提取英文部分並生成房間 ID
 function generateRoomId(title: string): string {
@@ -68,18 +30,31 @@ function generateRoomId(title: string): string {
 
 const app = new Hono<{ Bindings: CloudflareBindings }>();
 
-// 新增：獲取所有房間列表的 API
+// 獲取所有房間列表的 API
 app.get("/", async (c) => {
-  // 按最後活動時間降序排列
-  const sortedRooms = [...rooms].sort(
-    (a, b) =>
-      new Date(b.lastActivity).getTime() - new Date(a.lastActivity).getTime()
-  );
+  try {
+    const db = drizzle(c.env.DB);
+    const allRooms = await db
+      .select()
+      .from(room)
+      .orderBy(desc(room.lastActivity));
 
-  return c.json({ rooms: sortedRooms });
+    // 轉換時間戳為 ISO 字串格式供前端使用
+    const formattedRooms = allRooms.map((r) => ({
+      id: r.id,
+      name: r.name,
+      createdAt: new Date(r.createdAt * 1000).toISOString(),
+      lastActivity: new Date(r.lastActivity * 1000).toISOString(),
+    }));
+
+    return c.json({ rooms: formattedRooms });
+  } catch (error) {
+    console.error("Error fetching rooms:", error);
+    return c.json({ error: "獲取房間列表失敗" }, 500);
+  }
 });
 
-// 新增：創建房間的 API
+// 創建房間的 API
 app.post("/", async (c) => {
   try {
     const body = await c.req.json();
@@ -90,21 +65,28 @@ app.post("/", async (c) => {
     }
 
     const roomId = generateRoomId(title);
-    const now = new Date().toISOString();
+    const now = Math.floor(Date.now() / 1000); // 轉換為秒級時間戳以符合 schema
 
-    const newRoom: Room = {
-      id: roomId,
-      name: title.trim(),
-      createdAt: now,
-      lastActivity: now,
-      participantCount: 0,
+    const db = drizzle(c.env.DB);
+
+    // 插入新房間到資料庫並返回插入的資料
+    const [insertedRoom] = await db
+      .insert(room)
+      .values({
+        id: roomId,
+        name: title.trim(),
+        lastActivity: now,
+      })
+      .returning();
+
+    const newRoom = {
+      id: insertedRoom.id,
+      name: insertedRoom.name,
+      createdAt: new Date(insertedRoom.createdAt * 1000).toISOString(), // 轉換為 ISO 格式供前端使用
+      lastActivity: new Date(insertedRoom.lastActivity * 1000).toISOString(),
     };
 
-    // 將新房間添加到房間列表
-    rooms.push(newRoom);
-
     console.log("Created new room:", newRoom);
-    console.log("Total rooms:", rooms.length);
 
     return c.json({
       success: true,
@@ -117,57 +99,39 @@ app.post("/", async (c) => {
   }
 });
 
-// 新增：更新房間活動時間的 API
-app.patch("//:roomId/activity", async (c) => {
+// 更新房間活動時間的 API
+app.patch("/:roomId/activity", async (c) => {
   try {
     const roomId = c.req.param("roomId");
-    const roomIndex = rooms.findIndex((room) => room.id === roomId);
+    const now = Math.floor(Date.now() / 1000); // 轉換為秒級時間戳
 
-    if (roomIndex === -1) {
+    const db = drizzle(c.env.DB);
+
+    // 更新房間的最後活動時間並返回更新後的資料
+    const [updatedRoom] = await db
+      .update(room)
+      .set({ lastActivity: now })
+      .where(eq(room.id, roomId))
+      .returning();
+
+    if (!updatedRoom) {
       return c.json({ error: "房間不存在" }, 404);
     }
 
-    // 更新最後活動時間
-    rooms[roomIndex].lastActivity = new Date().toISOString();
+    const formattedRoom = {
+      id: updatedRoom.id,
+      name: updatedRoom.name,
+      createdAt: new Date(updatedRoom.createdAt * 1000).toISOString(), // 轉換為 ISO 格式
+      lastActivity: new Date(updatedRoom.lastActivity * 1000).toISOString(),
+    };
 
     return c.json({
       success: true,
-      room: rooms[roomIndex],
+      room: formattedRoom,
     });
   } catch (error) {
     console.error("Error updating room activity:", error);
     return c.json({ error: "更新房間活動時間失敗" }, 500);
-  }
-});
-
-// 新增：更新房間參與人數的 API
-app.patch("//:roomId/participants", async (c) => {
-  try {
-    const roomId = c.req.param("roomId");
-    const body = await c.req.json();
-    const { count } = body;
-
-    if (typeof count !== "number" || count < 0) {
-      return c.json({ error: "參與人數必須是非負整數" }, 400);
-    }
-
-    const roomIndex = rooms.findIndex((room) => room.id === roomId);
-
-    if (roomIndex === -1) {
-      return c.json({ error: "房間不存在" }, 404);
-    }
-
-    // 更新參與人數和最後活動時間
-    rooms[roomIndex].participantCount = count;
-    rooms[roomIndex].lastActivity = new Date().toISOString();
-
-    return c.json({
-      success: true,
-      room: rooms[roomIndex],
-    });
-  } catch (error) {
-    console.error("Error updating room participants:", error);
-    return c.json({ error: "更新參與人數失敗" }, 500);
   }
 });
 
