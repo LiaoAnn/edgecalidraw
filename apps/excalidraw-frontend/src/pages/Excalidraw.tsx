@@ -10,7 +10,7 @@ import {
   SocketId,
 } from "@excalidraw/excalidraw/types";
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import useBufferedWebSocket from "@/hooks/excalidraw-socket";
 import {
@@ -23,7 +23,6 @@ import {
   UserLeaveEvent,
 } from "@workspace/schemas/events";
 import { useParams } from "@tanstack/react-router";
-import DeleteRoomModal from "@/components/DeleteRoomModal";
 import RoomNotFound from "@/components/RoomNotFound";
 
 function LoadingRoom() {
@@ -43,12 +42,10 @@ function ExcalidrawComponent() {
   const [excalidrawAPI, setExcalidrawAPI] =
     useState<ExcalidrawImperativeAPI | null>(null);
   const { id } = useParams({ from: "/room/$id" });
-  const navigate = useNavigate({ from: "/room/$id" });
 
   const [userId, setUserId] = useState<string | null>(null);
   const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });
   const [isCollaborating, setIsCollaborating] = useState(false);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [roomExists, setRoomExists] = useState<boolean | null>(null); // null = loading, true = exists, false = not exists
 
   // 檢查房間是否存在
@@ -117,34 +114,6 @@ function ExcalidrawComponent() {
 
     updateRoomActivity();
   }, [id]);
-
-  const handleDeleteRoom = () => {
-    setShowDeleteModal(true);
-  };
-
-  const confirmDeleteRoom = async () => {
-    try {
-      const response = await fetch(`/api/rooms/${id}`, {
-        method: "DELETE",
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to delete room");
-      }
-
-      // 刪除成功後導航回首頁
-      navigate({ to: "/" });
-    } catch (error) {
-      console.error("Error deleting room:", error);
-      alert("刪除房間失敗，請稍後再試");
-    } finally {
-      setShowDeleteModal(false);
-    }
-  };
-
-  const cancelDeleteRoom = () => {
-    setShowDeleteModal(false);
-  };
 
   const handleMessage = (event: BufferEventType) => {
     if (event.type === "pointer") {
@@ -299,41 +268,11 @@ function ExcalidrawComponent() {
           <MainMenu.DefaultItems.Help />
           <MainMenu.DefaultItems.ClearCanvas />
           <MainMenu.Separator />
-          <MainMenu.ItemCustom>
-            <button
-              onClick={handleDeleteRoom}
-              style={{
-                padding: "8px 12px",
-                backgroundColor: "#dc3545",
-                color: "white",
-                border: "none",
-                borderRadius: "4px",
-                fontSize: "14px",
-                fontWeight: "500",
-                cursor: "pointer",
-                transition: "all 0.2s ease",
-              }}
-              onMouseOver={(e) => {
-                e.currentTarget.style.backgroundColor = "#c82333";
-              }}
-              onMouseOut={(e) => {
-                e.currentTarget.style.backgroundColor = "#dc3545";
-              }}
-            >
-              刪除房間
-            </button>
-          </MainMenu.ItemCustom>
           <MainMenu.Separator />
           <MainMenu.DefaultItems.ChangeCanvasBackground />
         </MainMenu>
         <WelcomeScreen />
       </Excalidraw>
-
-      <DeleteRoomModal
-        isOpen={showDeleteModal}
-        onConfirm={confirmDeleteRoom}
-        onCancel={cancelDeleteRoom}
-      />
     </div>
   );
 }
