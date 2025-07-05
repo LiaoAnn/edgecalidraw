@@ -160,4 +160,26 @@ export class ExcalidrawWebSocketServer extends DurableObject<Cloudflare> {
       data: this.elements,
     };
   }
+
+  // 清除房間所有資料的方法
+  async clearRoomData() {
+    // 清除元素數據
+    this.elements = [];
+    await this.ctx.storage.delete("elements");
+
+    // 清除活躍用戶和會話
+    this.activeUsers.clear();
+    this.userSessions.clear();
+
+    // 關閉所有 WebSocket 連接
+    for (const ws of this.ctx.getWebSockets()) {
+      try {
+        ws.close(1000, "Room deleted");
+      } catch (error) {
+        console.error("Error closing WebSocket:", error);
+      }
+    }
+
+    return { success: true };
+  }
 }

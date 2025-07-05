@@ -10,7 +10,7 @@ import {
   SocketId,
 } from "@excalidraw/excalidraw/types";
 import { useEffect, useState } from "react";
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import useBufferedWebSocket from "../hooks/excalidraw-socket";
 import {
   BufferEventType,
@@ -23,14 +23,57 @@ import {
 } from "@workspace/schemas/events";
 import { useParams } from "@tanstack/react-router";
 
+interface DeleteRoomModalProps {
+  isOpen: boolean;
+  onConfirm: () => void;
+  onCancel: () => void;
+}
+
+function DeleteRoomModal({
+  isOpen,
+  onConfirm,
+  onCancel,
+}: DeleteRoomModalProps) {
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-lg p-6 max-w-md w-full">
+        <h3 className="text-lg font-semibold mb-4 text-gray-800">
+          確認刪除房間
+        </h3>
+        <p className="text-gray-600 mb-6">
+          確定要刪除這個房間嗎？所有繪圖內容將永久遺失，此動作無法復原。
+        </p>
+        <div className="flex justify-end gap-3">
+          <button
+            onClick={onCancel}
+            className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors"
+          >
+            取消
+          </button>
+          <button
+            onClick={onConfirm}
+            className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors"
+          >
+            刪除房間
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function ExcalidrawComponent() {
   const [excalidrawAPI, setExcalidrawAPI] =
     useState<ExcalidrawImperativeAPI | null>(null);
   const { id } = useParams({ from: "/room/$id" });
+  const navigate = useNavigate({ from: "/room/$id" });
 
   const [userId, setUserId] = useState<string | null>(null);
   const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });
   const [isCollaborating, setIsCollaborating] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   // Initialize canvas size and set up resize listener
   useEffect(() => {
@@ -77,6 +120,34 @@ function ExcalidrawComponent() {
 
     updateRoomActivity();
   }, [id]);
+
+  const handleDeleteRoom = () => {
+    setShowDeleteModal(true);
+  };
+
+  const confirmDeleteRoom = async () => {
+    try {
+      const response = await fetch(`/api/rooms/${id}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to delete room");
+      }
+
+      // 刪除成功後導航回首頁
+      navigate({ to: "/" });
+    } catch (error) {
+      console.error("Error deleting room:", error);
+      alert("刪除房間失敗，請稍後再試");
+    } finally {
+      setShowDeleteModal(false);
+    }
+  };
+
+  const cancelDeleteRoom = () => {
+    setShowDeleteModal(false);
+  };
 
   const handleMessage = (event: BufferEventType) => {
     if (event.type === "pointer") {
@@ -221,10 +292,41 @@ function ExcalidrawComponent() {
           <MainMenu.DefaultItems.Help />
           <MainMenu.DefaultItems.ClearCanvas />
           <MainMenu.Separator />
+          <MainMenu.ItemCustom>
+            <button
+              onClick={handleDeleteRoom}
+              style={{
+                padding: "8px 12px",
+                backgroundColor: "#dc3545",
+                color: "white",
+                border: "none",
+                borderRadius: "4px",
+                fontSize: "14px",
+                fontWeight: "500",
+                cursor: "pointer",
+                transition: "all 0.2s ease",
+              }}
+              onMouseOver={(e) => {
+                e.currentTarget.style.backgroundColor = "#c82333";
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.backgroundColor = "#dc3545";
+              }}
+            >
+              刪除房間
+            </button>
+          </MainMenu.ItemCustom>
+          <MainMenu.Separator />
           <MainMenu.DefaultItems.ChangeCanvasBackground />
         </MainMenu>
         <WelcomeScreen />
       </Excalidraw>
+
+      <DeleteRoomModal
+        isOpen={showDeleteModal}
+        onConfirm={confirmDeleteRoom}
+        onCancel={cancelDeleteRoom}
+      />
     </div>
   );
 }

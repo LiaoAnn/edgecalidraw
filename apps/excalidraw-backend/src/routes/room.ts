@@ -135,4 +135,50 @@ app.patch("/:roomId/activity", async (c) => {
   }
 });
 
+// 刪除房間的 API
+app.delete("/:roomId", async (c) => {
+  try {
+    const roomId = c.req.param("roomId");
+    const db = drizzle(c.env.DB);
+
+    // 首先檢查房間是否存在
+    const existingRoom = await db
+      .select()
+      .from(room)
+      .where(eq(room.id, roomId))
+      .limit(1);
+
+    if (existingRoom.length === 0) {
+      return c.json({ error: "房間不存在" }, 404);
+    }
+
+    // 清除 durable object 中的資料
+    try {
+      const durableObjectId = c.env.DURABLE_OBJECT.idFromName(roomId);
+      const stub = c.env.DURABLE_OBJECT.get(durableObjectId);
+      await stub.clearRoomData();
+    } catch (error) {
+      console.error("Error clearing durable object data:", error);
+      // 即使清除 durable object 失敗，我們仍然繼續刪除資料庫記錄
+    }
+
+    // 從資料庫中刪除房間
+    const [deletedRoom] = await db
+      .delete(room)
+      .where(eq(room.id, roomId))
+      .returning();
+
+    return c.json({
+      success: true,
+      deletedRoom: {
+        id: deletedRoom.id,
+        name: deletedRoom.name,
+      },
+    });
+  } catch (error) {
+    console.error("Error deleting room:", error);
+    return c.json({ error: "刪除房間失敗" }, 500);
+  }
+});
+
 export default app;

@@ -10,11 +10,61 @@ interface Room {
   participantCount: number;
 }
 
+interface DeleteConfirmModalProps {
+  isOpen: boolean;
+  roomName: string;
+  onConfirm: () => void;
+  onCancel: () => void;
+}
+
+function DeleteConfirmModal({
+  isOpen,
+  roomName,
+  onConfirm,
+  onCancel,
+}: DeleteConfirmModalProps) {
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-lg p-6 max-w-md w-full">
+        <h3 className="text-lg font-semibold mb-4 text-gray-800">確認刪除</h3>
+        <p className="text-gray-600 mb-6">
+          確定要刪除畫布「{roomName}」嗎？此動作無法復原。
+        </p>
+        <div className="flex justify-end gap-3">
+          <button
+            onClick={onCancel}
+            className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors"
+          >
+            取消
+          </button>
+          <button
+            onClick={onConfirm}
+            className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors"
+          >
+            刪除
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function HomePage() {
   const [rooms, setRooms] = useState<Room[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [deleteConfirm, setDeleteConfirm] = useState<{
+    isOpen: boolean;
+    roomId: string;
+    roomName: string;
+  }>({
+    isOpen: false,
+    roomId: "",
+    roomName: "",
+  });
   const navigate = useNavigate({ from: "/" });
 
   useEffect(() => {
@@ -82,6 +132,35 @@ function HomePage() {
     }
   };
 
+  const handleDeleteRoom = async (roomId: string, roomName: string) => {
+    setDeleteConfirm({ isOpen: true, roomId, roomName });
+  };
+
+  const confirmDeleteRoom = async () => {
+    try {
+      const response = await fetch(`/api/rooms/${deleteConfirm.roomId}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to delete room");
+      }
+
+      // 關閉確認彈窗
+      setDeleteConfirm({ isOpen: false, roomId: "", roomName: "" });
+
+      // 重新獲取房間列表
+      await fetchRooms();
+    } catch (error) {
+      console.error("Error deleting room:", error);
+      alert("刪除房間失敗，請稍後再試");
+    }
+  };
+
+  const cancelDeleteRoom = () => {
+    setDeleteConfirm({ isOpen: false, roomId: "", roomName: "" });
+  };
+
   if (loading) {
     return (
       <div className="max-w-6xl mx-auto px-8 py-8 font-sans">
@@ -128,24 +207,41 @@ function HomePage() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {rooms.map((room) => (
-              <Link
+              <div
                 key={room.id}
-                to="/room/$id"
-                params={{ id: room.id }}
-                className="bg-white border border-gray-200 rounded-xl p-6 no-underline text-inherit transition-all duration-300 shadow-sm hover:-translate-y-1 hover:shadow-lg hover:border-indigo-500"
+                className="bg-white border border-gray-200 rounded-xl p-6 transition-all duration-300 shadow-sm hover:-translate-y-1 hover:shadow-lg hover:border-indigo-500 relative group"
               >
-                <div className="flex justify-between items-start mb-4 flex-col sm:flex-row sm:gap-4">
-                  <h3 className="text-xl font-semibold m-0 text-gray-800 flex-1">
-                    {room.name}
-                  </h3>
-                </div>
-                <div className="text-gray-600 text-sm">
-                  <p className="my-1">建立時間: {formatDate(room.createdAt)}</p>
-                  <p className="my-1">
-                    最後活動: {formatDate(room.lastActivity)}
-                  </p>
-                </div>
-              </Link>
+                <Link
+                  to="/room/$id"
+                  params={{ id: room.id }}
+                  className="no-underline text-inherit block"
+                >
+                  <div className="flex justify-between items-start mb-4 flex-col sm:flex-row sm:gap-4">
+                    <h3 className="text-xl font-semibold m-0 text-gray-800 flex-1">
+                      {room.name}
+                    </h3>
+                  </div>
+                  <div className="text-gray-600 text-sm">
+                    <p className="my-1">
+                      建立時間: {formatDate(room.createdAt)}
+                    </p>
+                    <p className="my-1">
+                      最後活動: {formatDate(room.lastActivity)}
+                    </p>
+                  </div>
+                </Link>
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    handleDeleteRoom(room.id, room.name);
+                  }}
+                  className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-red-500 hover:bg-red-600 text-white w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold"
+                  title="刪除畫布"
+                >
+                  ×
+                </button>
+              </div>
             ))}
           </div>
         )}
@@ -155,6 +251,13 @@ function HomePage() {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onCreateRoom={handleCreateRoom}
+      />
+
+      <DeleteConfirmModal
+        isOpen={deleteConfirm.isOpen}
+        roomName={deleteConfirm.roomName}
+        onConfirm={confirmDeleteRoom}
+        onCancel={cancelDeleteRoom}
       />
     </div>
   );
