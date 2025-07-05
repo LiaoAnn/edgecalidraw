@@ -44,9 +44,7 @@ const useBufferedWebSocket = (
 
     return () => {
       clearInterval(interval);
-      if (socket) {
-        socket.close();
-      }
+      socket?.close();
     };
   });
 

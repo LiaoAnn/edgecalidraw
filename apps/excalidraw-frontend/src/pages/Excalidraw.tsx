@@ -24,6 +24,22 @@ import {
 } from "@workspace/schemas/events";
 import { useParams } from "@tanstack/react-router";
 import RoomNotFound from "@/components/RoomNotFound";
+import { Theme } from "@excalidraw/excalidraw/element/types";
+
+function getTheme(theme: Theme | "system"): Theme {
+  if (theme !== "system") return theme;
+
+  // check prefers-color-scheme
+  if (typeof window !== "undefined" && window.matchMedia) {
+    // check if the system prefers dark mode
+    const prefersDark = window.matchMedia(
+      "(prefers-color-scheme: dark)"
+    ).matches;
+    return prefersDark ? "dark" : "light";
+  }
+  // Fallback to light theme if prefers-color-scheme is not supported
+  return "light";
+}
 
 function LoadingRoom() {
   const { t } = useTranslation();
@@ -47,6 +63,18 @@ function ExcalidrawComponent() {
   const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });
   const [isCollaborating, setIsCollaborating] = useState(false);
   const [roomExists, setRoomExists] = useState<boolean | null>(null); // null = loading, true = exists, false = not exists
+  const [theme, setTheme] = useState<Theme | "system">("light");
+
+  const updateTheme = (newTheme: Theme | "system") => {
+    setTheme(newTheme);
+    if (excalidrawAPI) {
+      excalidrawAPI.updateScene({
+        appState: {
+          theme: getTheme(newTheme),
+        },
+      });
+    }
+  };
 
   // 檢查房間是否存在
   useEffect(() => {
@@ -204,6 +232,8 @@ function ExcalidrawComponent() {
       }}
     >
       <Excalidraw
+        excalidrawAPI={(api) => setExcalidrawAPI(api)}
+        isCollaborating={isCollaborating}
         onPointerUpdate={(payload) => {
           sendEventViaSocket(
             PointerEventSchema.parse({
@@ -226,8 +256,6 @@ function ExcalidrawComponent() {
             );
           }
         }}
-        excalidrawAPI={(api) => setExcalidrawAPI(api)}
-        isCollaborating={isCollaborating}
         renderTopRightUI={() => (
           <LiveCollaborationTrigger
             isCollaborating={isCollaborating}
@@ -268,6 +296,11 @@ function ExcalidrawComponent() {
           <MainMenu.DefaultItems.Help />
           <MainMenu.DefaultItems.ClearCanvas />
           <MainMenu.Separator />
+          <MainMenu.DefaultItems.ToggleTheme
+            allowSystemTheme
+            theme={theme}
+            onSelect={updateTheme}
+          />
           <MainMenu.Separator />
           <MainMenu.DefaultItems.ChangeCanvasBackground />
         </MainMenu>
