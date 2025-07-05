@@ -11,6 +11,7 @@ import {
 } from "@excalidraw/excalidraw/types";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
+import { useTranslation } from "react-i18next";
 import useBufferedWebSocket from "@/hooks/excalidraw-socket";
 import {
   BufferEventType,
@@ -26,11 +27,13 @@ import DeleteRoomModal from "@/components/DeleteRoomModal";
 import RoomNotFound from "@/components/RoomNotFound";
 
 function LoadingRoom() {
+  const { t } = useTranslation();
+
   return (
     <div className="fixed inset-0 bg-gray-100 flex items-center justify-center">
       <div className="text-center">
         <div className="animate-spin w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full mx-auto mb-4"></div>
-        <p className="text-gray-600">正在檢查房間...</p>
+        <p className="text-gray-600">{t("__error.__loading")}</p>
       </div>
     </div>
   );

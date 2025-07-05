@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 interface CreateRoomModalProps {
   isOpen: boolean;
@@ -11,6 +12,7 @@ function CreateRoomModal({
   onClose,
   onCreateRoom,
 }: CreateRoomModalProps) {
+  const { t } = useTranslation();
   const [title, setTitle] = useState("");
   const [isCreating, setIsCreating] = useState(false);
 
@@ -48,7 +50,7 @@ function CreateRoomModal({
       >
         <div className="flex justify-between items-center px-8 py-6 border-b border-gray-200">
           <h2 className="m-0 text-2xl font-semibold text-gray-800">
-            建立新畫布
+            {t("__modal.__create_room.__title")}
           </h2>
           <button
             className="bg-none border-none text-2xl text-gray-600 cursor-pointer p-0 w-8 h-8 flex items-center justify-center rounded-md transition-all duration-200 hover:bg-gray-100 hover:text-gray-800 disabled:opacity-50 disabled:cursor-not-allowed"
@@ -65,14 +67,14 @@ function CreateRoomModal({
               htmlFor="room-title"
               className="block mb-2 font-medium text-gray-800 text-sm"
             >
-              畫布標題
+              {t("__modal.__create_room.__canvas_title")}
             </label>
             <input
               id="room-title"
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="請輸入畫布標題..."
+              placeholder={t("__modal.__create_room.__placeholder")}
               maxLength={50}
               required
               disabled={isCreating}
@@ -80,7 +82,7 @@ function CreateRoomModal({
               className="w-full px-3 py-3 border-2 border-gray-200 rounded-lg text-base transition-all duration-200 box-border focus:outline-none focus:border-indigo-500 focus:shadow-[0_0_0_3px_rgba(102,126,234,0.1)] disabled:bg-gray-50 disabled:text-gray-500 disabled:cursor-not-allowed"
             />
             <div className="mt-2 text-sm text-gray-600">
-              標題將用於生成房間 ID，支援中英文
+              {t("__modal.__create_room.__title_description")}
             </div>
           </div>
 
@@ -91,14 +93,16 @@ function CreateRoomModal({
               onClick={handleClose}
               disabled={isCreating}
             >
-              取消
+              {t("__modal.__create_room.__cancel")}
             </button>
             <button
               type="submit"
               className="px-6 py-3 rounded-lg text-sm font-medium cursor-pointer transition-all duration-200 border-none min-w-[100px] bg-gradient-to-br from-indigo-500 to-purple-600 text-white shadow-lg shadow-indigo-500/30 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-indigo-500/40 disabled:opacity-60 disabled:cursor-not-allowed disabled:transform-none"
               disabled={!title.trim() || isCreating}
             >
-              {isCreating ? "創建中..." : "創建畫布"}
+              {isCreating
+                ? t("__modal.__create_room.__creating")
+                : t("__modal.__create_room.__create")}
             </button>
           </div>
         </form>

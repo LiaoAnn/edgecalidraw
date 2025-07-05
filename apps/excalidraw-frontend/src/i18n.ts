@@ -5,6 +5,17 @@ import { initReactI18next } from "react-i18next";
 import zhTWTrans from "@/locales/zh-tw.json";
 import enUSTrans from "@/locales/en-us.json";
 
+// 安全地獲取保存的語言設置，默認為繁體中文
+const getSavedLanguage = (): string => {
+  try {
+    return localStorage.getItem("language") || "zh-TW";
+  } catch {
+    // 在 SSR 或 localStorage 不可用時返回默認值
+    console.warn("localStorage not available, using default language");
+    return "zh-TW";
+  }
+};
+
 i18n.use(initReactI18next).init({
   resources: {
     // 后面切换需要使用此处定义的key
@@ -15,7 +26,7 @@ i18n.use(initReactI18next).init({
       translation: enUSTrans,
     },
   },
-  lng: "zh-TW",
+  lng: getSavedLanguage(),
   fallbackLng: "zh-TW",
   debug: import.meta.env.DEV,
   interpolation: {

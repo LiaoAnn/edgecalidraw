@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
+import { useTranslation } from "react-i18next";
 import CreateRoomModal from "@/components/CreateRoomModal";
 import DeleteConfirmModal from "@/components/DeleteConfirmModal";
+import LanguageSwitch from "@/components/LanguageSwitch";
 
 interface Room {
   id: string;
@@ -11,6 +13,7 @@ interface Room {
 }
 
 function HomePage() {
+  const { t } = useTranslation();
   const [rooms, setRooms] = useState<Room[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -92,7 +95,7 @@ function HomePage() {
       navigate({ to: "/room/$id", params: { id: roomId } });
     } catch (error) {
       console.error("Error creating room:", error);
-      alert("創建房間失敗，請稍後再試");
+      alert(t("__error.__create_room_failed"));
     }
   };
 
@@ -117,7 +120,7 @@ function HomePage() {
       await fetchRooms();
     } catch (error) {
       console.error("Error deleting room:", error);
-      alert("刪除房間失敗，請稍後再試");
+      alert(t("__error.__delete_room_failed"));
     }
   };
 
@@ -128,7 +131,9 @@ function HomePage() {
   if (loading) {
     return (
       <div className="max-w-6xl mx-auto px-8 py-8 font-sans">
-        <div className="text-center py-12 text-xl text-gray-600">載入中...</div>
+        <div className="text-center py-12 text-xl text-gray-600">
+          {t("__error.__loading")}
+        </div>
       </div>
     );
   }
@@ -137,7 +142,7 @@ function HomePage() {
     return (
       <div className="max-w-6xl mx-auto px-8 py-8 font-sans">
         <div className="text-center py-12 text-xl text-red-600">
-          錯誤: {error}
+          {t("__error.__error")}: {error}
         </div>
       </div>
     );
@@ -146,16 +151,19 @@ function HomePage() {
   return (
     <div className="max-w-6xl mx-auto px-8 py-8 font-sans">
       <header className="text-center mb-12 relative">
-        <button
-          onClick={logout}
-          className="absolute top-0 right-0 bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
-        >
-          登出
-        </button>
+        <div className="absolute top-0 right-0 flex items-center gap-3">
+          <LanguageSwitch />
+          <button
+            onClick={logout}
+            className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+          >
+            {t("__home.__logout")}
+          </button>
+        </div>
         <h1 className="text-5xl font-bold mb-2 bg-gradient-to-br from-indigo-500 to-purple-600 bg-clip-text text-transparent">
-          Edgecalidraw
+          {t("__app.__title")}
         </h1>
-        <p className="text-xl text-gray-600 m-0">協作式繪圖平台</p>
+        <p className="text-xl text-gray-600 m-0">{t("__app.__subtitle")}</p>
       </header>
 
       <div className="flex justify-center mb-12">
@@ -163,16 +171,18 @@ function HomePage() {
           className="bg-gradient-to-br from-indigo-500 to-purple-600 text-white border-none px-8 py-4 text-lg font-semibold rounded-lg cursor-pointer transition-all duration-300 shadow-lg shadow-indigo-500/30 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-indigo-500/40"
           onClick={createNewRoom}
         >
-          建立新畫布
+          {t("__home.__create_new_canvas")}
         </button>
       </div>
 
       <div className="rooms-section">
-        <h2 className="text-3xl font-semibold mb-6 text-gray-800">所有畫布</h2>
+        <h2 className="text-3xl font-semibold mb-6 text-gray-800">
+          {t("__home.__all_canvases")}
+        </h2>
         {rooms.length === 0 ? (
           <div className="text-center py-12 text-gray-600">
-            <p className="text-lg mb-2">目前沒有任何畫布</p>
-            <p className="text-lg">點擊上方按鈕建立你的第一個畫布！</p>
+            <p className="text-lg mb-2">{t("__home.__no_canvases")}</p>
+            <p className="text-lg">{t("__home.__create_first_canvas")}</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -193,10 +203,11 @@ function HomePage() {
                   </div>
                   <div className="text-gray-600 text-sm">
                     <p className="my-1">
-                      建立時間: {formatDate(room.createdAt)}
+                      {t("__home.__created_at")}: {formatDate(room.createdAt)}
                     </p>
                     <p className="my-1">
-                      最後活動: {formatDate(room.lastActivity)}
+                      {t("__home.__last_activity")}:{" "}
+                      {formatDate(room.lastActivity)}
                     </p>
                   </div>
                 </Link>
@@ -207,7 +218,7 @@ function HomePage() {
                     handleDeleteRoom(room.id, room.name);
                   }}
                   className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-red-500 hover:bg-red-600 text-white w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold"
-                  title="刪除畫布"
+                  title={t("__home.__delete_canvas")}
                 >
                   ×
                 </button>
