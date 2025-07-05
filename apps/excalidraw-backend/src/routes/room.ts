@@ -99,6 +99,40 @@ app.post("/", async (c) => {
   }
 });
 
+// 檢查房間是否存在的 API
+app.get("/:roomId/exists", async (c) => {
+  try {
+    const roomId = c.req.param("roomId");
+    const db = drizzle(c.env.DB);
+
+    // 檢查房間是否存在
+    const existingRoom = await db
+      .select()
+      .from(room)
+      .where(eq(room.id, roomId))
+      .limit(1);
+
+    const exists = existingRoom.length > 0;
+
+    return c.json({
+      exists,
+      room: exists
+        ? {
+            id: existingRoom[0].id,
+            name: existingRoom[0].name,
+            createdAt: new Date(existingRoom[0].createdAt * 1000).toISOString(),
+            lastActivity: new Date(
+              existingRoom[0].lastActivity * 1000
+            ).toISOString(),
+          }
+        : null,
+    });
+  } catch (error) {
+    console.error("Error checking room existence:", error);
+    return c.json({ error: "檢查房間存在性失敗" }, 500);
+  }
+});
+
 // 更新房間活動時間的 API
 app.patch("/:roomId/activity", async (c) => {
   try {

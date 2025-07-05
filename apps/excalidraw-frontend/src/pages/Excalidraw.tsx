@@ -64,6 +64,57 @@ function DeleteRoomModal({
   );
 }
 
+interface RoomNotFoundProps {
+  roomId: string;
+}
+
+function RoomNotFound({ roomId }: RoomNotFoundProps) {
+  const navigate = useNavigate();
+
+  return (
+    <div className="fixed inset-0 bg-gray-100 flex items-center justify-center">
+      <div className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full mx-4">
+        <div className="text-center">
+          <div className="text-6xl mb-4">🚫</div>
+          <h2 className="text-2xl font-bold text-gray-800 mb-4">房間不存在</h2>
+          <p className="text-gray-600 mb-6">
+            抱歉，房間{" "}
+            <code className="bg-gray-100 px-2 py-1 rounded text-sm">
+              {roomId}
+            </code>{" "}
+            不存在或已被刪除。
+          </p>
+          <div className="flex flex-col gap-3">
+            <button
+              onClick={() => navigate({ to: "/" })}
+              className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors font-medium"
+            >
+              返回首頁
+            </button>
+            <Link
+              to="/"
+              className="text-blue-500 hover:text-blue-600 transition-colors text-sm"
+            >
+              查看所有房間
+            </Link>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function LoadingRoom() {
+  return (
+    <div className="fixed inset-0 bg-gray-100 flex items-center justify-center">
+      <div className="text-center">
+        <div className="animate-spin w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full mx-auto mb-4"></div>
+        <p className="text-gray-600">正在檢查房間...</p>
+      </div>
+    </div>
+  );
+}
+
 function ExcalidrawComponent() {
   const [excalidrawAPI, setExcalidrawAPI] =
     useState<ExcalidrawImperativeAPI | null>(null);
@@ -74,6 +125,28 @@ function ExcalidrawComponent() {
   const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });
   const [isCollaborating, setIsCollaborating] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [roomExists, setRoomExists] = useState<boolean | null>(null); // null = loading, true = exists, false = not exists
+
+  // 檢查房間是否存在
+  useEffect(() => {
+    const checkRoomExists = async () => {
+      try {
+        const response = await fetch(`/api/rooms/${id}/exists`);
+        const data = await response.json();
+
+        if (data.exists) {
+          setRoomExists(true);
+        } else {
+          setRoomExists(false);
+        }
+      } catch (error) {
+        console.error("Error checking room existence:", error);
+        setRoomExists(false);
+      }
+    };
+
+    checkRoomExists();
+  }, [id]);
 
   // Initialize canvas size and set up resize listener
   useEffect(() => {
@@ -217,6 +290,16 @@ function ExcalidrawComponent() {
   };
 
   const sendEventViaSocket = useBufferedWebSocket(handleMessage, id);
+
+  if (roomExists === null) {
+    // 房間存在性檢查中
+    return <LoadingRoom />;
+  }
+
+  if (roomExists === false) {
+    // 房間不存在
+    return <RoomNotFound roomId={id} />;
+  }
 
   return (
     <div
