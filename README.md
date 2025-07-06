@@ -45,3 +45,13 @@ If you facing the pnpm permission issue, it maybe caused by the Dev Container's 
 ```
 
 You can remove the `mounts` section in `.devcontainer/devcontainer.json` file, and then rebuild the Dev Container.
+
+## Todos
+
+There are still some features to be implemented, such as:
+
+- [ ] Real-time laser pointer when collaborating
+- [ ] Real-time screen following
+- [ ] Language switching on whiteboard
+- [ ] Change the user name
+- [ ] Change the room name
