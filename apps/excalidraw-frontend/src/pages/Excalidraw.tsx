@@ -9,7 +9,7 @@ import {
   ExcalidrawImperativeAPI,
   SocketId,
 } from "@excalidraw/excalidraw/types";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import useBufferedWebSocket from "@/hooks/excalidraw-socket";
 import {
@@ -148,74 +148,112 @@ function ExcalidrawComponent() {
     updateRoomActivity();
   }, [id]);
 
-  const handleMessage = (event: BufferEventType) => {
-    if (event.type === "pointer") {
-      handlePointerEvent(event);
-    } else if (event.type === "elementChange") {
-      handleElementChangeEvent(event);
-    } else if (event.type === "userJoin") {
-      handleUserJoinEvent(event);
-    } else if (event.type === "userLeave") {
-      handleUserLeaveEvent(event);
-    }
-  };
+  const handlePointerEvent = useCallback(
+    (event: PointerEvent) => {
+      if (!excalidrawAPI) return;
 
-  const handlePointerEvent = (event: PointerEvent) => {
-    if (!excalidrawAPI) return;
-
-    const allCollaborators = excalidrawAPI.getAppState().collaborators;
-    const collaborator = new Map(allCollaborators);
-    collaborator.set(event.data.userId as SocketId, {
-      username: event.data.userId,
-      pointer: {
-        x: event.data.x,
-        y: event.data.y,
-        tool: "laser",
-      },
-    });
-    if (userId) {
-      collaborator.delete(userId as SocketId);
-    }
-    setIsCollaborating(collaborator.size > 1);
-    excalidrawAPI.updateScene({
-      collaborators: collaborator,
-    });
-  };
-
-  const handleElementChangeEvent = (event: ExcalidrawElementChange) => {
-    if (excalidrawAPI) {
-      // Update the scene with the new elements
-      excalidrawAPI.updateScene({
-        elements: event.data,
+      const allCollaborators = excalidrawAPI.getAppState().collaborators;
+      const collaborator = new Map(allCollaborators);
+      collaborator.set(event.data.userId as SocketId, {
+        username: event.data.userId,
+        pointer: {
+          x: event.data.x,
+          y: event.data.y,
+          tool: "laser",
+        },
       });
-    }
-  };
+      if (userId) {
+        collaborator.delete(userId as SocketId);
+      }
+      setIsCollaborating(collaborator.size > 0);
+      excalidrawAPI.updateScene({
+        collaborators: collaborator,
+      });
+    },
+    [excalidrawAPI, userId]
+  );
 
-  const handleUserJoinEvent = (event: UserJoinEvent) => {
+  const handleElementChangeEvent = useCallback(
+    (event: ExcalidrawElementChange) => {
+      if (excalidrawAPI) {
+        // Update the scene with the new elements
+        excalidrawAPI.updateScene({
+          elements: event.data,
+        });
+      }
+    },
+    [excalidrawAPI]
+  );
+
+  const handleUserJoinEvent = useCallback((event: UserJoinEvent) => {
     console.log("User joined:", event.data.userId);
     // The user is added to collaborators when they send pointer events
     // This is just for logging purposes
-  };
+  }, []);
 
-  const handleUserLeaveEvent = (event: UserLeaveEvent) => {
-    if (!excalidrawAPI) return;
+  const handleUserLeaveEvent = useCallback(
+    (event: UserLeaveEvent) => {
+      if (!excalidrawAPI) return;
 
-    console.log("User left:", event.data.userId);
-    const allCollaborators = excalidrawAPI.getAppState().collaborators;
-    const collaborator = new Map(allCollaborators);
+      console.log("User left:", event.data.userId);
+      const allCollaborators = excalidrawAPI.getAppState().collaborators;
+      const collaborator = new Map(allCollaborators);
 
-    // Remove the user from collaborators
-    collaborator.delete(event.data.userId as SocketId);
+      // Remove the user from collaborators
+      collaborator.delete(event.data.userId as SocketId);
 
-    // Update collaboration state
-    setIsCollaborating(collaborator.size > 0);
+      // Update collaboration state
+      setIsCollaborating(collaborator.size > 0);
 
-    excalidrawAPI.updateScene({
-      collaborators: collaborator,
-    });
-  };
+      excalidrawAPI.updateScene({
+        collaborators: collaborator,
+      });
+    },
+    [excalidrawAPI]
+  );
 
-  const sendEventViaSocket = useBufferedWebSocket(handleMessage, id);
+  const handleMessage = useCallback(
+    (event: BufferEventType) => {
+      if (event.type === "pointer") {
+        handlePointerEvent(event);
+      } else if (event.type === "elementChange") {
+        handleElementChangeEvent(event);
+      } else if (event.type === "userJoin") {
+        handleUserJoinEvent(event);
+      } else if (event.type === "userLeave") {
+        handleUserLeaveEvent(event);
+      }
+    },
+    [
+      handlePointerEvent,
+      handleElementChangeEvent,
+      handleUserJoinEvent,
+      handleUserLeaveEvent,
+    ]
+  );
+
+  // 為 WebSocket 事件發送函數創建一個引用
+  const sendEventRef = useRef<(event: BufferEventType) => void>(() => {});
+
+  // Set different buffer times based on collaboration status
+  // When collaborating, use a faster update rate (15ms)
+  // When not collaborating, use a slower update rate (50ms)
+  const bufferTime = useMemo(() => {
+    return isCollaborating ? 15 : 50;
+  }, [isCollaborating]);
+
+  // 使用帶有 bufferTime 參數的 useBufferedWebSocket
+  const sendEvent = useBufferedWebSocket(handleMessage, id, bufferTime);
+
+  // 每當 sendEvent 更新時，更新引用
+  useEffect(() => {
+    sendEventRef.current = sendEvent;
+  }, [sendEvent, bufferTime]);
+
+  // 創建一個穩定的 API 來發送事件
+  const sendEventViaSocket = useCallback((event: BufferEventType) => {
+    sendEventRef.current(event);
+  }, []);
 
   if (roomExists === null) {
     // 房間存在性檢查中
