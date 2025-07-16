@@ -55,3 +55,4 @@ There are still some features to be implemented, such as:
 - [ ] Language switching on whiteboard
 - [ ] Change the user name
 - [ ] Change the room name
+- [ ] Store library in the database
