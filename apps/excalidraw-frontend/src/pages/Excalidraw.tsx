@@ -2,6 +2,7 @@ import {
   Excalidraw,
   LiveCollaborationTrigger,
   MainMenu,
+  useHandleLibrary,
   WelcomeScreen,
 } from "@excalidraw/excalidraw";
 import "@excalidraw/excalidraw/index.css";
@@ -27,6 +28,7 @@ import { Theme } from "@excalidraw/excalidraw/element/types";
 import { ArrowLeftIcon } from "@/components/Icons";
 import { t } from "i18next";
 import { useNavigate } from "@tanstack/react-router";
+import { LibraryAPIAdapter } from "@/lib/library-api-adapter";
 
 function getTheme(theme: Theme | "system"): Theme {
   if (theme !== "system") return theme;
@@ -254,6 +256,12 @@ function ExcalidrawComponent() {
   const sendEventViaSocket = useCallback((event: BufferEventType) => {
     sendEventRef.current(event);
   }, []);
+
+  // handle library items
+  useHandleLibrary({
+    excalidrawAPI,
+    adapter: LibraryAPIAdapter,
+  });
 
   if (roomExists === null) {
     // 房間存在性檢查中
