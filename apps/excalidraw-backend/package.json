@@ -9,6 +9,7 @@
     "db:apply": "wrangler d1 migrations apply DB"
   },
   "dependencies": {
+    "@hono/zod-validator": "^0.7.1",
     "@workspace/schemas": "workspace:^",
     "drizzle-orm": "^0.44.2",
     "hono": "^4.7.5",
