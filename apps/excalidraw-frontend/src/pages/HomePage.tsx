@@ -31,6 +31,7 @@ function HomePage() {
 
   useEffect(() => {
     fetchRooms();
+    document.title = "Edgecalidraw";
   }, []);
 
   const logout = () => {

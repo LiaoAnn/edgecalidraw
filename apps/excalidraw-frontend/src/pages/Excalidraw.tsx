@@ -92,6 +92,7 @@ function ExcalidrawComponent() {
 
         if (data.exists) {
           setRoomExists(true);
+          document.title = `${data.room.name} | Edgecalidraw`;
         } else {
           setRoomExists(false);
         }

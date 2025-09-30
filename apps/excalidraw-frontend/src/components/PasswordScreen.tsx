@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import LanguageSwitch from "@/components/LanguageSwitch";
@@ -9,6 +9,10 @@ const PasswordScreen = () => {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    document.title = "Edgecalidraw";
+  }, []);
 
   const authenticate = async (password: string): Promise<boolean> => {
     try {
