@@ -248,15 +248,70 @@ function ExcalidrawComponent() {
   // 使用帶有 bufferTime 參數的 useBufferedWebSocket
   const sendEvent = useBufferedWebSocket(handleMessage, id, bufferTime);
 
-  // 每當 sendEvent 更新時，更新引用
+  // 保存視圖位置到 localStorage
+  const saveViewState = useCallback(() => {
+    if (excalidrawAPI) {
+      const appState = excalidrawAPI.getAppState();
+      const viewState = {
+        scrollX: appState.scrollX,
+        scrollY: appState.scrollY,
+        zoom: appState.zoom,
+      };
+      localStorage.setItem(`roomViewState_${id}`, JSON.stringify(viewState));
+    }
+  }, [excalidrawAPI, id]);
+
+  // 從 localStorage 恢復視圖位置
+  const restoreViewState = useCallback(() => {
+    if (excalidrawAPI) {
+      const savedState = localStorage.getItem(`roomViewState_${id}`);
+      if (savedState) {
+        try {
+          const viewState = JSON.parse(savedState);
+          excalidrawAPI.updateScene({
+            appState: {
+              scrollX: viewState.scrollX,
+              scrollY: viewState.scrollY,
+              zoom: viewState.zoom,
+            },
+          });
+        } catch (error) {
+          console.error("Error restoring view state:", error);
+        }
+      }
+    }
+  }, [excalidrawAPI, id]);
+
+  // 當 excalidrawAPI 設置後，恢復視圖狀態
   useEffect(() => {
-    sendEventRef.current = sendEvent;
-  }, [sendEvent, bufferTime]);
+    if (excalidrawAPI) {
+      restoreViewState();
+    }
+  }, [excalidrawAPI, restoreViewState]);
+
+  // 當離開頁面時保存視圖狀態
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      saveViewState();
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+      saveViewState();
+    };
+  }, [saveViewState]);
 
   // 創建一個穩定的 API 來發送事件
   const sendEventViaSocket = useCallback((event: BufferEventType) => {
     sendEventRef.current(event);
   }, []);
+
+  // 每當 sendEvent 更新時，更新引用
+  useEffect(() => {
+    sendEventRef.current = sendEvent;
+  }, [sendEvent]);
 
   // handle library items
   useHandleLibrary({
