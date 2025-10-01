@@ -57,6 +57,15 @@ const useBufferedWebSocket = (
       // This exmaple just saves the entire element list and batches them to
       // the websocket server
       bufferedEvents.current["all-elements"] = event;
+    } else if (event.type === "viewChange") {
+      // Send view change events immediately for better responsiveness
+      // Don't buffer them to reduce latency in screen following
+      if (
+        socketRef.current &&
+        socketRef.current.readyState === WebSocket.OPEN
+      ) {
+        socketRef.current.send(JSON.stringify(event));
+      }
     }
   };
 

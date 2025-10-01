@@ -9,6 +9,7 @@ import "@excalidraw/excalidraw/index.css";
 import {
   ExcalidrawImperativeAPI,
   SocketId,
+  NormalizedZoomValue,
 } from "@excalidraw/excalidraw/types";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -21,6 +22,8 @@ import {
   ExcalidrawElementChange,
   UserJoinEvent,
   UserLeaveEvent,
+  ViewEventSchema,
+  ViewEvent,
 } from "@workspace/schemas/events";
 import { useParams } from "@tanstack/react-router";
 import RoomNotFound from "@/components/RoomNotFound";
@@ -29,6 +32,41 @@ import { ArrowLeftIcon } from "@/components/Icons";
 import { t } from "i18next";
 import { useNavigate } from "@tanstack/react-router";
 import { LibraryAPIAdapter } from "@/lib/library-api-adapter";
+
+// Throttle utility function for view events using requestAnimationFrame
+function throttleViewEvent(
+  func: (scrollX: number, scrollY: number, zoom: { value: number }) => void,
+  delay: number
+): (scrollX: number, scrollY: number, zoom: { value: number }) => void {
+  let rafId: number | null = null;
+  let lastExecTime = 0;
+  let pendingArgs: [number, number, { value: number }] | null = null;
+
+  const execute = () => {
+    if (pendingArgs) {
+      func(...pendingArgs);
+      pendingArgs = null;
+      lastExecTime = Date.now();
+    }
+    rafId = null;
+  };
+
+  return (scrollX: number, scrollY: number, zoom: { value: number }) => {
+    const currentTime = Date.now();
+    pendingArgs = [scrollX, scrollY, zoom];
+
+    // If enough time has passed, execute immediately
+    if (currentTime - lastExecTime > delay) {
+      if (rafId) {
+        cancelAnimationFrame(rafId);
+      }
+      rafId = requestAnimationFrame(execute);
+    } else if (!rafId) {
+      // Schedule for next frame
+      rafId = requestAnimationFrame(execute);
+    }
+  };
+}
 
 function getTheme(theme: Theme | "system"): Theme {
   if (theme !== "system") return theme;
@@ -71,6 +109,21 @@ function ExcalidrawComponent() {
   const [isCollaborating, setIsCollaborating] = useState(false);
   const [roomExists, setRoomExists] = useState<boolean | null>(null); // null = loading, true = exists, false = not exists
   const [theme, setTheme] = useState<Theme | "system">("light");
+
+  // Laser trail state
+  const remoteTrailsRef = useRef<
+    Map<
+      string,
+      {
+        points: Array<{ x: number; y: number; timestamp: number }>;
+        isActive: boolean;
+      }
+    >
+  >(new Map());
+
+  // Screen following state
+  const isFollowingRef = useRef(false);
+  const availableUsersRef = useRef<Set<string>>(new Set());
 
   const updateTheme = (newTheme: Theme | "system") => {
     setTheme(newTheme);
@@ -157,14 +210,50 @@ function ExcalidrawComponent() {
 
       const allCollaborators = excalidrawAPI.getAppState().collaborators;
       const collaborator = new Map(allCollaborators);
+
+      // Handle laser trail for remote users
+      if (event.data.tool === "laser") {
+        const trail = remoteTrailsRef.current.get(event.data.userId) || {
+          points: [],
+          isActive: false,
+        };
+
+        if (event.data.button === "down") {
+          // Start new trail
+          trail.points = [
+            { x: event.data.x, y: event.data.y, timestamp: Date.now() },
+          ];
+          trail.isActive = true;
+        } else if (event.data.button === "up") {
+          // End trail
+          trail.isActive = false;
+        } else if (trail.isActive) {
+          // Add point to active trail
+          trail.points.push({
+            x: event.data.x,
+            y: event.data.y,
+            timestamp: Date.now(),
+          });
+          // Keep only recent points (last 100 points or last 2 seconds)
+          const now = Date.now();
+          trail.points = trail.points
+            .filter((point) => now - point.timestamp < 2000)
+            .slice(-100);
+        }
+
+        remoteTrailsRef.current.set(event.data.userId, trail);
+      }
+
       collaborator.set(event.data.userId as SocketId, {
         username: event.data.userId,
         pointer: {
           x: event.data.x,
           y: event.data.y,
-          tool: "laser",
+          tool: event.data.tool === "laser" ? "laser" : "pointer",
         },
+        button: event.data.button,
       });
+
       if (userId) {
         collaborator.delete(userId as SocketId);
       }
@@ -205,12 +294,54 @@ function ExcalidrawComponent() {
       // Remove the user from collaborators
       collaborator.delete(event.data.userId as SocketId);
 
+      // Clear the user's laser trail
+      remoteTrailsRef.current.delete(event.data.userId);
+
+      // Excalidraw will handle stopping follow automatically
+
       // Update collaboration state
       setIsCollaborating(collaborator.size > 0);
 
       excalidrawAPI.updateScene({
         collaborators: collaborator,
       });
+    },
+    [excalidrawAPI]
+  );
+
+  const handleViewEvent = useCallback(
+    (event: ViewEvent) => {
+      // Track this user as available for following
+      availableUsersRef.current.add(event.data.userId);
+
+      if (!excalidrawAPI) return;
+
+      // Check if we're following this user using Excalidraw's built-in follow state
+      const appState = excalidrawAPI.getAppState();
+      const userToFollow = appState.userToFollow?.socketId;
+
+      // Only follow if we're following this user
+      if (userToFollow === event.data.userId) {
+        isFollowingRef.current = true;
+
+        // Use requestAnimationFrame for smoother updates
+        requestAnimationFrame(() => {
+          excalidrawAPI.updateScene({
+            appState: {
+              zoom: {
+                value: event.data.zoom as NormalizedZoomValue,
+              },
+              scrollX: event.data.scrollX,
+              scrollY: event.data.scrollY,
+            },
+          });
+        });
+
+        // Reset the flag after a short delay to allow the update to complete
+        setTimeout(() => {
+          isFollowingRef.current = false;
+        }, 50);
+      }
     },
     [excalidrawAPI]
   );
@@ -225,6 +356,8 @@ function ExcalidrawComponent() {
         handleUserJoinEvent(event);
       } else if (event.type === "userLeave") {
         handleUserLeaveEvent(event);
+      } else if (event.type === "viewChange") {
+        handleViewEvent(event);
       }
     },
     [
@@ -232,6 +365,7 @@ function ExcalidrawComponent() {
       handleElementChangeEvent,
       handleUserJoinEvent,
       handleUserLeaveEvent,
+      handleViewEvent,
     ]
   );
 
@@ -247,6 +381,27 @@ function ExcalidrawComponent() {
 
   // 使用帶有 bufferTime 參數的 useBufferedWebSocket
   const sendEvent = useBufferedWebSocket(handleMessage, id, bufferTime);
+
+  // Throttled view event sender (30ms throttle for smoother following)
+  const sendViewEventThrottled = useMemo(
+    () =>
+      throttleViewEvent((scrollX, scrollY, zoom) => {
+        if (userId) {
+          sendEvent(
+            ViewEventSchema.parse({
+              type: "viewChange",
+              data: {
+                userId: userId,
+                zoom: zoom.value,
+                scrollX,
+                scrollY,
+              },
+            })
+          );
+        }
+      }, 30),
+    [sendEvent, userId]
+  );
 
   // 保存視圖位置到 localStorage
   const saveViewState = useCallback(() => {
@@ -303,11 +458,6 @@ function ExcalidrawComponent() {
     };
   }, [saveViewState]);
 
-  // 創建一個穩定的 API 來發送事件
-  const sendEventViaSocket = useCallback((event: BufferEventType) => {
-    sendEventRef.current(event);
-  }, []);
-
   // 每當 sendEvent 更新時，更新引用
   useEffect(() => {
     sendEventRef.current = sendEvent;
@@ -343,26 +493,43 @@ function ExcalidrawComponent() {
         isCollaborating={isCollaborating}
         langCode={i18n.language}
         onPointerUpdate={(payload) => {
-          sendEventViaSocket(
-            PointerEventSchema.parse({
-              type: "pointer",
-              data: {
-                userId: userId,
-                x: payload.pointer.x,
-                y: payload.pointer.y,
-              },
-            })
-          );
-        }}
-        onPointerUp={() => {
           if (excalidrawAPI) {
-            sendEventViaSocket(
-              ExcalidrawElementChangeSchema.parse({
-                type: "elementChange",
-                data: excalidrawAPI.getSceneElements(),
+            const activeTool = excalidrawAPI.getAppState().activeTool;
+            sendEvent(
+              PointerEventSchema.parse({
+                type: "pointer",
+                data: {
+                  userId: userId,
+                  x: payload.pointer.x,
+                  y: payload.pointer.y,
+                  tool: activeTool.type,
+                  button: payload.button,
+                },
               })
             );
           }
+        }}
+        onPointerUp={() => {
+          if (excalidrawAPI) {
+            const activeTool = excalidrawAPI.getAppState().activeTool;
+            // Only send elementChange if not using laser tool
+            if (activeTool.type !== "laser") {
+              sendEvent(
+                ExcalidrawElementChangeSchema.parse({
+                  type: "elementChange",
+                  data: excalidrawAPI.getSceneElements(),
+                })
+              );
+            }
+          }
+        }}
+        onScrollChange={(scrollX, scrollY, zoom) => {
+          // Don't send view events if we're currently following another user
+          if (isFollowingRef.current) {
+            return;
+          }
+
+          sendViewEventThrottled(scrollX, scrollY, zoom);
         }}
         renderTopRightUI={() => (
           <LiveCollaborationTrigger
