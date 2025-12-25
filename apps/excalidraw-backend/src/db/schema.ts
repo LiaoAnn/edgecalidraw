@@ -16,15 +16,3 @@ export const room = sqliteTable("rooms", {
 
 export type Room = typeof room.$inferSelect;
 export type InsertRoom = typeof room.$inferInsert;
-
-export const libraryItem = sqliteTable("library_items", {
-  id: text("id").primaryKey(),
-  status: text({ enum: ["published", "unpublished"] }).notNull(),
-  elements: text("elements").notNull(), // JSON stringified elements
-  created: integer("created").notNull(),
-  name: text("name"),
-  error: text("error"),
-});
-
-export type LibraryItem = typeof libraryItem.$inferSelect;
-export type InsertLibraryItem = typeof libraryItem.$inferInsert;
