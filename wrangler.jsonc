@@ -18,7 +18,12 @@
     "enabled": true,
   },
   "durable_objects": {
-    "bindings": [],
+    "bindings": [
+      {
+        "name": "TLDRAW_DURABLE_OBJECT",
+        "class_name": "TldrawDurableObject",
+      }
+    ],
   },
   "migrations": [
     {
@@ -32,6 +37,12 @@
       "deleted_classes": [
         "ExcalidrawWebSocketServer"
       ]
+    },
+    {
+      "tag": "v3",
+      "new_sqlite_classes": [
+        "TldrawDurableObject"
+      ]
     }
   ],
   "d1_databases": [
@@ -41,5 +52,13 @@
       "database_id": "6f4480d5-a4b2-49a3-a71d-5cf4de78adb9",
       "migrations_dir": "apps/excalidraw-backend/migrations",
     }
-  ]
+  ],
+  // TODO: change the bucket names
+  "r2_buckets": [
+    {
+      "binding": "TLDRAW_BUCKET",
+      "bucket_name": "multiplayer-template",
+      "preview_bucket_name": "multiplayer-template-preview",
+    },
+  ],
 }
