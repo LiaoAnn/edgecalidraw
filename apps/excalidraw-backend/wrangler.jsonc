@@ -27,17 +27,18 @@
     "enabled": true,
   },
   "durable_objects": {
-    "bindings": [
-      {
-        "class_name": "ExcalidrawWebSocketServer",
-        "name": "DURABLE_OBJECT",
-      },
-    ],
+    "bindings": [],
   },
   "migrations": [
     {
       "tag": "v1",
       "new_sqlite_classes": [
+        "ExcalidrawWebSocketServer"
+      ]
+    },
+    {
+      "tag": "v2",
+      "deleted_classes": [
         "ExcalidrawWebSocketServer"
       ]
     }

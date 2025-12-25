@@ -188,9 +188,7 @@ app.delete("/:roomId", async (c) => {
 
     // 清除 durable object 中的資料
     try {
-      const durableObjectId = c.env.DURABLE_OBJECT.idFromName(roomId);
-      const stub = c.env.DURABLE_OBJECT.get(durableObjectId);
-      await stub.clearRoomData();
+      // TODO: clear room data in durable object
     } catch (error) {
       console.error("Error clearing durable object data:", error);
       // 即使清除 durable object 失敗，我們仍然繼續刪除資料庫記錄
