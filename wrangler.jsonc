@@ -1,18 +1,15 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "edgecalidraw",
-  "main": "apps/excalidraw-backend/src/index.ts",
-  "compatibility_date": "2025-03-21",
+  "compatibility_date": "2025-09-02",
   "compatibility_flags": [
-    "nodejs_compat_v2"
+    "nodejs_compat"
   ],
-  "assets": {
-    "binding": "ASSETS",
-    "directory": "apps/excalidraw-frontend/dist",
-    "not_found_handling": "single-page-application",
-    "run_worker_first": [
-      "/api/*"
-    ]
+  "main": "src/index.ts",
+  "dev": {
+    "ip": "127.0.0.1",
+    "port": 8787,
+    "inspector_port": 9229
   },
   "observability": {
     "enabled": true,
@@ -50,7 +47,7 @@
       "binding": "DB",
       "database_name": "edgecalidraw-db",
       "database_id": "6f4480d5-a4b2-49a3-a71d-5cf4de78adb9",
-      "migrations_dir": "apps/excalidraw-backend/migrations",
+      "migrations_dir": "migrations",
     }
   ],
   // TODO: change the bucket names
