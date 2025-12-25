@@ -12,17 +12,21 @@
     "cf-typegen": "wrangler types"
   },
   "dependencies": {
-    "@excalidraw/excalidraw": "^0.18.0",
     "@tanstack/react-router": "^1.114.22",
+    "@tldraw/sync": "^4.2.1",
+    "@tldraw/sync-core": "^4.2.1",
+    "@tldraw/tlschema": "^4.2.1",
     "@workspace/schemas": "workspace:^",
     "clsx": "^2.1.1",
     "i18next": "^25.3.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-i18next": "^15.6.0"
+    "react-i18next": "^15.6.0",
+    "tldraw": "^4.2.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",
+    "@iconify/react": "^6.0.2",
     "@tailwindcss/vite": "^4.1.11",
     "@types/react": "^18.3.18",
     "@types/react-dom": "^18.3.5",

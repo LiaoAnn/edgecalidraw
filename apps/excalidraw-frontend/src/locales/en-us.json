@@ -15,6 +15,8 @@
   },
   "__error": {
     "__back_to_home": "Back to Home",
+    "__copied": "Copied!",
+    "__copy_link": "Copy link",
     "__create_room_failed": "Failed to create room, please try again later",
     "__delete_room_failed": "Failed to delete room, please try again later",
     "__error": "Error",

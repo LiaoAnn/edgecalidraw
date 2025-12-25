@@ -6,7 +6,7 @@ import {
   redirect,
 } from "@tanstack/react-router";
 
-import ExcalidrawComponent from "@/pages/Excalidraw";
+import TldrawPage from "@/pages/Tldraw";
 import HomePage from "@/pages/HomePage";
 import PasswordScreen from "@/components/PasswordScreen";
 
@@ -67,18 +67,14 @@ const indexRoute = createRoute({
 });
 
 // 房間路由 - 不需要認證
-const excalidrawRoute = createRoute({
+const roomRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/room/$id",
-  component: ExcalidrawComponent,
+  component: TldrawPage,
 });
 
 // Define route tree
-const routeTree = rootRoute.addChildren([
-  loginRoute,
-  indexRoute,
-  excalidrawRoute,
-]);
+const routeTree = rootRoute.addChildren([loginRoute, indexRoute, roomRoute]);
 
 // Create router instance
 const router = createRouter({ routeTree });
