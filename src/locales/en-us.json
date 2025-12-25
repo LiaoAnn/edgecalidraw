@@ -1,0 +1,79 @@
+{
+	"__app": {
+		"__subtitle": "Collaborative Drawing Platform",
+		"__title": "Edgecalidraw"
+	},
+	"__auth": {
+		"__access_prompt": "Please enter the system password to access the admin interface",
+		"__auth_error": "Authentication error occurred, please try again later",
+		"__authenticating": "Authenticating...",
+		"__enter_password": "Please enter password",
+		"__enter_system": "Enter System",
+		"__forgot_password": "Forgot password? Please contact the system administrator",
+		"__login": "Login",
+		"__logout": "Logout",
+		"__password_error": "Incorrect password, please try again",
+		"__system_password": "System Password",
+		"__verifying": "Verifying..."
+	},
+	"__error": {
+		"__back_to_home": "Back to Home",
+		"__copied": "Copied!",
+		"__copy_link": "Copy link",
+		"__create_room_failed": "Failed to create room, please try again later",
+		"__delete_room_failed": "Failed to delete room, please try again later",
+		"__error": "Error",
+		"__fetch_rooms_failed": "Failed to fetch rooms, please try again later",
+		"__loading": "Loading...",
+		"__room_not_found": "Room Not Found",
+		"__room_not_found_message": "Sorry, room <1>{{roomId}}</1> does not exist or has been deleted.",
+		"__view_all_rooms": "View All Rooms"
+	},
+	"__home": {
+		"__all_canvases": "All Canvases",
+		"__created_at": "Created at",
+		"__create_first_canvas": "Click the button above to create your first canvas!",
+		"__create_new_canvas": "Create New Canvas",
+		"__delete_canvas": "Delete Canvas",
+		"__last_activity": "Last activity",
+		"__logout": "Logout",
+		"__no_canvases": "No canvases yet"
+	},
+	"__room": {
+		"__create_first": "Click the button above to create your first room!",
+		"__create_new": "Create New Room",
+		"__created_at": "Created at",
+		"__enter": "Enter Room",
+		"__last_activity": "Last activity",
+		"__no_rooms": "No rooms yet"
+	},
+	"__header": {
+		"__close_menu": "Close menu",
+		"__home": "Home",
+		"__navigation": "Navigation",
+		"__open_menu": "Open menu"
+	},
+	"__modal": {
+		"__create_room": {
+			"__cancel": "Cancel",
+			"__canvas_title": "Canvas Title",
+			"__create": "Create Canvas",
+			"__creating": "Creating...",
+			"__placeholder": "Please enter canvas title...",
+			"__title": "Create New Canvas",
+			"__title_description": "Title will be used to generate room ID, supports Chinese and English"
+		},
+		"__delete_confirm": {
+			"__cancel": "Cancel",
+			"__delete": "Delete",
+			"__message": "Are you sure you want to delete canvas \"{roomName}\"? This action cannot be undone.",
+			"__title": "Confirm Deletion"
+		},
+		"__delete_room": {
+			"__cancel": "Cancel",
+			"__delete_room": "Delete Room",
+			"__message": "Are you sure you want to delete this room? All drawing content will be permanently lost, this action cannot be undone.",
+			"__title": "Confirm Room Deletion"
+		}
+	}
+}

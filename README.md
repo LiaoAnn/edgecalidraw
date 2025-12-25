@@ -4,6 +4,8 @@
 
 This repo is inspired by [backpine/learn-durable-objects](https://github.com/backpine/learn-durable-objects), and is a rewrite of it with additional features such as a "room list" for managing multiple drawing rooms, and enhanced real-time collaboration experience based on previous work.
 
+Originally, this tool was developed using [Excalidraw](https://excalidraw.com/). However, the synchronization experience was not as smooth as expected. After discovering [tldraw](https://tldraw.dev/) and its official [Durable Object example](https://github.com/tldraw/tldraw-sync-cloudflare), I decided to switch to tldraw for a better collaborative experience.
+
 ## Features
 
 ### Room Management
@@ -55,4 +57,3 @@ There are still some features to be implemented, such as:
 - [ ] Language switching on whiteboard
 - [ ] Change the user name
 - [ ] Change the room name
-- [x] Store library in the database

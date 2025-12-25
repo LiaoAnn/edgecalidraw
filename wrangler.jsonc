@@ -1,44 +1,60 @@
 {
-  "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "edgecalidraw",
-  "main": "apps/excalidraw-backend/src/index.ts",
-  "compatibility_date": "2025-03-21",
-  "compatibility_flags": [
-    "nodejs_compat_v2"
-  ],
-  "assets": {
-    "binding": "ASSETS",
-    "directory": "apps/excalidraw-frontend/dist",
-    "not_found_handling": "single-page-application",
-    "run_worker_first": [
-      "/api/*"
-    ]
-  },
-  "observability": {
-    "enabled": true,
-  },
-  "durable_objects": {
-    "bindings": [
-      {
-        "class_name": "ExcalidrawWebSocketServer",
-        "name": "DURABLE_OBJECT",
-      },
-    ],
-  },
-  "migrations": [
-    {
-      "tag": "v1",
-      "new_sqlite_classes": [
-        "ExcalidrawWebSocketServer"
-      ]
-    }
-  ],
-  "d1_databases": [
-    {
-      "binding": "DB",
-      "database_name": "edgecalidraw-db",
-      "database_id": "6f4480d5-a4b2-49a3-a71d-5cf4de78adb9",
-      "migrations_dir": "apps/excalidraw-backend/migrations",
-    }
-  ]
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "edgecalidraw",
+	"compatibility_date": "2025-09-02",
+	"compatibility_flags": [
+		"nodejs_compat"
+	],
+	"main": "src/index.ts",
+	"dev": {
+		"ip": "127.0.0.1",
+		"port": 8787,
+		"inspector_port": 9229
+	},
+	"observability": {
+		"enabled": true,
+	},
+	"durable_objects": {
+		"bindings": [
+			{
+				"name": "TLDRAW_DURABLE_OBJECT",
+				"class_name": "TldrawDurableObject",
+			}
+		],
+	},
+	"migrations": [
+		{
+			"tag": "v1",
+			"new_sqlite_classes": [
+				"ExcalidrawWebSocketServer"
+			],
+		},
+		{
+			"tag": "v2",
+			"deleted_classes": [
+				"ExcalidrawWebSocketServer"
+			]
+		},
+		{
+			"tag": "v3",
+			"new_sqlite_classes": [
+				"TldrawDurableObject"
+			]
+		}
+	],
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_name": "edgecalidraw-db",
+			"database_id": "6f4480d5-a4b2-49a3-a71d-5cf4de78adb9",
+			"migrations_dir": "migrations",
+		}
+	],
+	"r2_buckets": [
+		{
+			"binding": "TLDRAW_BUCKET",
+			"bucket_name": "edgecalidraw-bucket",
+			"preview_bucket_name": "edgecalidraw-bucket-preview",
+		},
+	],
 }
