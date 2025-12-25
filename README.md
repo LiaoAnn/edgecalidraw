@@ -1,5 +1,8 @@
 # Edgecalidraw
 
+> [!IMPORTANT]
+> This branch (`excalidraw-ver`) contains the original version developed with Excalidraw. As the project has migrated to tldraw, **this branch is no longer maintained**. For the latest features and updates, please switch to the `main` branch.
+
 [![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/LiaoAnn/edgecalidraw)
 
 This repo is inspired by [backpine/learn-durable-objects](https://github.com/backpine/learn-durable-objects), and is a rewrite of it with additional features such as a "room list" for managing multiple drawing rooms, and enhanced real-time collaboration experience based on previous work.
