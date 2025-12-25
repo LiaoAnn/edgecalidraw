@@ -53,8 +53,8 @@
 	"r2_buckets": [
 		{
 			"binding": "TLDRAW_BUCKET",
-			"bucket_name": "edgecalidarw-bucket",
-			"preview_bucket_name": "edgecalidarw-bucket-preview",
+			"bucket_name": "edgecalidraw-bucket",
+			"preview_bucket_name": "edgecalidraw-bucket-preview",
 		},
 	],
 }
