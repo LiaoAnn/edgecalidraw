@@ -18,21 +18,39 @@ After creating a room, you can share the URL with others to collaborate in real-
 
 ## Deployment
 
-You can click the "Deploy to Cloudflare" button above to deploy this project directly to your Cloudflare account.
+### Prerequisites
 
-Ensure you have connected your Cloudflare account to your GitHub account, and have the necessary permissions to deploy Workers.
+- A Cloudflare account connected to your GitHub account
+- Necessary permissions to deploy Cloudflare Workers
 
-After that, you will see the deployment configuration page. You can re-name the project and database name if you want.
+### Deploy Steps
+
+**Step 1:** Click the "Deploy to Cloudflare" button above to start the deployment process.
+
+**Step 2:** On the deployment configuration page, you can customize:
+- Project name
+- D1 database name
+- R2 bucket name
 
 ![Pre-deployment Screenshot](./docs/pre-deployment.png)
 
-Now you click **Create and deploy** button to start the deployment process. This will take a few minutes to complete, as it will set up the Cloudflare Worker, Durable Objects, and the SQLite database automatically.
+**Step 3:** **Important!** Change the `SYSTEM_PASSWORD` environment variable. This password is used to authenticate admin access to the room list.
 
-After the deployment is complete, you have to set the `SYSTEM_PASSWORD` environment variable in the Cloudflare Workers dashboard. This is used to authenticate the admin user for the room list. Just go to the **Settings** tab, scroll down to the **Variables and Secrets** section, and add a new variable with the name `SYSTEM_PASSWORD` and a strong password as the value.
+> [!WARNING]
+> The default value in `.dev.vars.example` is `p@ssw0rd`. **You must change this to a secure password before deployment.**
 
-![System Password Screenshot](./docs/system-password-env.png)
+**Step 4:** Click the **Create and deploy** button. The deployment process will:
+- Create a new repository in your GitHub account
+- Set up Cloudflare Worker and Durable Objects
+- Create R2 bucket and D1 database
+- Run database migrations automatically
 
-Click the **Deploy** button to apply the changes. Congratulations! You have successfully deployed Edgecalidraw, you can now access the application at the URL provided in the dashboard. 🎉
+This process typically takes a few minutes to complete.
+
+**Step 5:** After deployment completes:
+1. Go to the **Settings** tab in Cloudflare
+2. Find your Edgecalidraw URL
+3. Start using your own whiteboard! 🎉
 
 ## Development
 
