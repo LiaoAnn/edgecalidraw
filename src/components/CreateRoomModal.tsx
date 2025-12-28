@@ -48,12 +48,12 @@ function CreateRoomModal({
 				className="bg-white rounded-xl w-[90%] max-w-md max-h-[90vh] overflow-y-auto shadow-2xl animate-in fade-in slide-in-from-bottom-2 duration-300"
 				onClick={(e) => e.stopPropagation()}
 			>
-				<div className="flex justify-between items-center px-8 py-6 border-b border-gray-200">
-					<h2 className="m-0 text-2xl font-semibold text-gray-800">
+				<div className="flex justify-between items-center px-8 py-6 border-b border-border">
+					<h2 className="m-0 text-2xl font-semibold text-foreground">
 						{t("__modal.__create_room.__title")}
 					</h2>
 					<button
-						className="bg-none border-none text-2xl text-gray-600 cursor-pointer p-0 w-8 h-8 flex items-center justify-center rounded-md transition-all duration-200 hover:bg-gray-100 hover:text-gray-800 disabled:opacity-50 disabled:cursor-not-allowed"
+						className="bg-none border-none text-2xl text-muted-foreground cursor-pointer p-0 w-8 h-8 flex items-center justify-center rounded-md transition-all duration-200 hover:bg-muted hover:text-foreground disabled:opacity-50 disabled:cursor-not-allowed"
 						onClick={handleClose}
 						disabled={isCreating}
 					>
@@ -65,7 +65,7 @@ function CreateRoomModal({
 					<div className="mb-6">
 						<label
 							htmlFor="room-title"
-							className="block mb-2 font-medium text-gray-800 text-sm"
+							className="block mb-2 font-medium text-foreground text-sm"
 						>
 							{t("__modal.__create_room.__canvas_title")}
 						</label>
@@ -78,9 +78,9 @@ function CreateRoomModal({
 							maxLength={50}
 							required
 							disabled={isCreating}
-							className="w-full px-3 py-3 border-2 border-gray-200 rounded-lg text-base transition-all duration-200 box-border focus:outline-none focus:border-indigo-500 focus:shadow-[0_0_0_3px_rgba(102,126,234,0.1)] disabled:bg-gray-50 disabled:text-gray-500 disabled:cursor-not-allowed"
+							className="w-full px-3 py-3 border-2 border-border rounded-lg text-base transition-all duration-200 box-border focus:outline-none focus:border-ring focus:shadow-[0_0_0_3px_rgba(161,161,170,0.1)] disabled:bg-muted disabled:text-muted-foreground disabled:cursor-not-allowed"
 						/>
-						<div className="mt-2 text-sm text-gray-600">
+						<div className="mt-2 text-sm text-muted-foreground">
 							{t("__modal.__create_room.__title_description")}
 						</div>
 					</div>
@@ -88,7 +88,7 @@ function CreateRoomModal({
 					<div className="flex gap-4 justify-end mt-8">
 						<button
 							type="button"
-							className="px-6 py-3 rounded-lg text-sm font-medium cursor-pointer transition-all duration-200 border-none min-w-[100px] bg-gray-100 text-gray-800 border border-gray-300 hover:bg-gray-200 disabled:opacity-60 disabled:cursor-not-allowed"
+							className="px-6 py-3 rounded-lg text-sm font-medium cursor-pointer transition-all duration-200 border-none min-w-[100px] bg-secondary text-secondary-foreground border border-border hover:bg-secondary/80 disabled:opacity-60 disabled:cursor-not-allowed"
 							onClick={handleClose}
 							disabled={isCreating}
 						>
@@ -96,7 +96,7 @@ function CreateRoomModal({
 						</button>
 						<button
 							type="submit"
-							className="px-6 py-3 rounded-lg text-sm font-medium cursor-pointer transition-all duration-200 border-none min-w-[100px] bg-gradient-to-br from-indigo-500 to-purple-600 text-white shadow-lg shadow-indigo-500/30 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-indigo-500/40 disabled:opacity-60 disabled:cursor-not-allowed disabled:transform-none"
+							className="px-6 py-3 rounded-lg text-sm font-medium cursor-pointer transition-all duration-200 border-none min-w-[100px] bg-primary text-primary-foreground shadow-lg shadow-primary/10 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-primary/20 disabled:opacity-60 disabled:cursor-not-allowed disabled:transform-none"
 							disabled={!title.trim() || isCreating}
 						>
 							{isCreating

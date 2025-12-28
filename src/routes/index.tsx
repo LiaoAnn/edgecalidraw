@@ -76,33 +76,35 @@ function HomePage() {
 
 	if (isLoading) {
 		return (
-			<div className="min-h-screen bg-gray-50 flex items-center justify-center">
-				<div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+			<div className="min-h-screen bg-background flex items-center justify-center">
+				<div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
 			</div>
 		);
 	}
 
 	return (
-		<div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+		<div className="min-h-screen bg-background py-12 px-4 sm:px-6 lg:px-8">
 			<div className="max-w-5xl mx-auto">
 				<div className="flex justify-between items-center mb-12">
 					<div>
-						<h1 className="text-4xl font-extrabold text-gray-900 tracking-tight mb-2">
+						<h1 className="text-4xl font-extrabold text-foreground tracking-tight mb-2">
 							{t("__app.__title")}
 						</h1>
-						<p className="text-lg text-gray-600">{t("__app.__subtitle")}</p>
+						<p className="text-lg text-muted-foreground">
+							{t("__app.__subtitle")}
+						</p>
 					</div>
 					<div className="flex items-center space-x-4">
 						<LanguageSwitch />
 						<button
 							onClick={() => logoutMutation.mutate()}
-							className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+							className="px-4 py-2 text-sm font-medium text-foreground bg-background border border-border rounded-md hover:bg-muted transition-colors"
 						>
 							{t("__auth.__logout")}
 						</button>
 						<button
 							onClick={() => setIsModalOpen(true)}
-							className="px-6 py-2 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition-all shadow-md hover:shadow-lg"
+							className="px-6 py-2 bg-primary text-primary-foreground font-semibold rounded-lg hover:bg-primary/90 transition-all shadow-md hover:shadow-lg"
 						>
 							{t("__room.__create_new")}
 						</button>
@@ -110,8 +112,10 @@ function HomePage() {
 				</div>
 
 				{error && (
-					<div className="bg-red-50 border-l-4 border-red-400 p-4 mb-8">
-						<p className="text-red-700">{t("__error.__fetch_rooms_failed")}</p>
+					<div className="bg-destructive/10 border-l-4 border-destructive p-4 mb-8">
+						<p className="text-destructive">
+							{t("__error.__fetch_rooms_failed")}
+						</p>
 					</div>
 				)}
 
@@ -119,11 +123,11 @@ function HomePage() {
 					{rooms.map((room) => (
 						<div
 							key={room.id}
-							className="bg-white rounded-xl shadow-sm hover:shadow-md transition-all border border-gray-100 overflow-hidden group"
+							className="bg-card rounded-xl shadow-sm hover:shadow-md transition-all border border-border overflow-hidden group"
 						>
 							<div className="p-6">
 								<div className="flex justify-between items-start mb-4">
-									<h3 className="text-xl font-bold text-gray-900 group-hover:text-indigo-600 transition-colors truncate pr-4">
+									<h3 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors truncate pr-4">
 										{room.name}
 									</h3>
 									<button
@@ -135,7 +139,7 @@ function HomePage() {
 												roomName: room.name,
 											});
 										}}
-										className="text-gray-400 hover:text-red-500 transition-colors p-1"
+										className="text-muted-foreground hover:text-destructive transition-colors p-1"
 									>
 										<svg
 											className="w-5 h-5"
@@ -152,7 +156,7 @@ function HomePage() {
 										</svg>
 									</button>
 								</div>
-								<div className="space-y-2 text-sm text-gray-500 mb-6">
+								<div className="space-y-2 text-sm text-muted-foreground mb-6">
 									<div className="flex items-center">
 										<svg
 											className="w-4 h-4 mr-2"
@@ -190,7 +194,7 @@ function HomePage() {
 								<Link
 									to="/room/$id"
 									params={{ id: room.id }}
-									className="block w-full text-center py-2 bg-gray-50 text-indigo-600 font-semibold rounded-lg hover:bg-indigo-50 transition-colors border border-indigo-100"
+									className="block w-full text-center py-2 bg-secondary text-secondary-foreground font-semibold rounded-lg hover:bg-secondary/80 transition-colors border border-border"
 								>
 									{t("__room.__enter")}
 								</Link>
@@ -200,9 +204,9 @@ function HomePage() {
 				</div>
 
 				{rooms.length === 0 && !isLoading && (
-					<div className="text-center py-20 bg-white rounded-2xl border-2 border-dashed border-gray-200">
+					<div className="text-center py-20 bg-card rounded-2xl border-2 border-dashed border-border">
 						<svg
-							className="mx-auto h-12 w-12 text-gray-400 mb-4"
+							className="mx-auto h-12 w-12 text-muted-foreground mb-4"
 							fill="none"
 							stroke="currentColor"
 							viewBox="0 0 24 24"
@@ -214,13 +218,15 @@ function HomePage() {
 								d="M12 6v6m0 0v6m0-6h6m-6 0H6"
 							/>
 						</svg>
-						<h3 className="text-lg font-medium text-gray-900 mb-1">
+						<h3 className="text-lg font-medium text-foreground mb-1">
 							{t("__room.__no_rooms")}
 						</h3>
-						<p className="text-gray-500 mb-6">{t("__room.__create_first")}</p>
+						<p className="text-muted-foreground mb-6">
+							{t("__room.__create_first")}
+						</p>
 						<button
 							onClick={() => setIsModalOpen(true)}
-							className="inline-flex items-center px-6 py-2 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition-all"
+							className="inline-flex items-center px-6 py-2 bg-primary text-primary-foreground font-semibold rounded-lg hover:bg-primary/90 transition-all"
 						>
 							{t("__room.__create_new")}
 						</button>

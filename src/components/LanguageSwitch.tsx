@@ -31,22 +31,22 @@ const LanguageSwitch = ({
 		return (
 			<div className={`relative group ${className}`}>
 				<button
-					className="flex items-center justify-center w-8 h-8 rounded-full hover:bg-gray-100 transition-colors text-gray-600 hover:text-gray-900"
+					className="flex items-center justify-center w-8 h-8 rounded-full hover:bg-muted transition-colors text-muted-foreground hover:text-foreground"
 					type="button"
 				>
 					<Icon icon="mdi:web" className="w-5 h-5" />
 				</button>
 
 				{/* Dropdown menu */}
-				<div className="absolute top-full right-0 mt-1 bg-white border border-gray-300 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 min-w-[140px]">
+				<div className="absolute top-full right-0 mt-1 bg-background border border-border rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 min-w-[140px]">
 					{languages.map((language) => (
 						<button
 							key={language.code}
 							onClick={() => handleLanguageChange(language.code)}
-							className={`w-full flex items-center gap-2 px-3 py-2 text-sm text-left hover:bg-gray-50 transition-colors first:rounded-t-lg last:rounded-b-lg ${
+							className={`w-full flex items-center gap-2 px-3 py-2 text-sm text-left hover:bg-muted transition-colors first:rounded-t-lg last:rounded-b-lg ${
 								language.code === i18n.language
-									? "bg-indigo-50 text-indigo-700 font-medium"
-									: "text-gray-700"
+									? "bg-secondary text-secondary-foreground font-medium"
+									: "text-foreground"
 							}`}
 						>
 							<span className="text-base">{language.flag}</span>
@@ -54,7 +54,7 @@ const LanguageSwitch = ({
 							{language.code === i18n.language && (
 								<Icon
 									icon="mdi:check"
-									className="w-4 h-4 ml-auto text-indigo-600"
+									className="w-4 h-4 ml-auto text-primary"
 								/>
 							)}
 						</button>
@@ -67,7 +67,7 @@ const LanguageSwitch = ({
 	return (
 		<div className={`relative group ${className}`}>
 			<button
-				className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+				className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-foreground bg-background border border-border rounded-lg hover:bg-muted transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:border-ring"
 				type="button"
 			>
 				<span className="text-base">{currentLanguage.flag}</span>
@@ -76,24 +76,21 @@ const LanguageSwitch = ({
 			</button>
 
 			{/* Dropdown menu */}
-			<div className="absolute top-full right-0 mt-1 bg-white border border-gray-300 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 min-w-[140px]">
+			<div className="absolute top-full right-0 mt-1 bg-background border border-border rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 min-w-[140px]">
 				{languages.map((language) => (
 					<button
 						key={language.code}
 						onClick={() => handleLanguageChange(language.code)}
-						className={`w-full flex items-center gap-2 px-3 py-2 text-sm text-left hover:bg-gray-50 transition-colors first:rounded-t-lg last:rounded-b-lg ${
+						className={`w-full flex items-center gap-2 px-3 py-2 text-sm text-left hover:bg-muted transition-colors first:rounded-t-lg last:rounded-b-lg ${
 							language.code === i18n.language
-								? "bg-indigo-50 text-indigo-700 font-medium"
-								: "text-gray-700"
+								? "bg-secondary text-secondary-foreground font-medium"
+								: "text-foreground"
 						}`}
 					>
 						<span className="text-base">{language.flag}</span>
 						<span>{language.label}</span>
 						{language.code === i18n.language && (
-							<Icon
-								icon="mdi:check"
-								className="w-4 h-4 ml-auto text-indigo-600"
-							/>
+							<Icon icon="mdi:check" className="w-4 h-4 ml-auto text-primary" />
 						)}
 					</button>
 				))}

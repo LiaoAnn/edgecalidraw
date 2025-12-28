@@ -61,7 +61,7 @@ const PasswordScreen = () => {
 	};
 
 	return (
-		<div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-50 to-purple-50">
+		<div className="min-h-screen flex items-center justify-center bg-background">
 			{/* Language Switch - 固定在右上角 */}
 			<div className="fixed top-4 right-4 z-10">
 				<LanguageSwitch />
@@ -70,17 +70,19 @@ const PasswordScreen = () => {
 			<div className="max-w-md w-full mx-4">
 				<div className="bg-white rounded-2xl shadow-xl p-8">
 					<div className="text-center mb-8">
-						<h1 className="text-4xl font-bold mb-2 bg-gradient-to-br from-indigo-500 to-purple-600 bg-clip-text text-transparent">
+						<h1 className="text-4xl font-bold mb-2 text-foreground">
 							{t("__app.__title")}
 						</h1>
-						<p className="text-gray-600">{t("__auth.__access_prompt")}</p>
+						<p className="text-muted-foreground">
+							{t("__auth.__access_prompt")}
+						</p>
 					</div>
 
 					<form onSubmit={handleSubmit} className="space-y-6">
 						<div>
 							<label
 								htmlFor="password"
-								className="block text-sm font-medium text-gray-700 mb-2"
+								className="block text-sm font-medium text-foreground mb-2"
 							>
 								{t("__auth.__system_password")}
 							</label>
@@ -89,25 +91,27 @@ const PasswordScreen = () => {
 								type="password"
 								value={password}
 								onChange={(e) => setPassword(e.target.value)}
-								className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-colors"
+								className="w-full px-4 py-3 border border-input rounded-lg focus:ring-2 focus:ring-ring focus:border-ring outline-none transition-colors"
 								placeholder={t("__auth.__enter_password")}
 								required
 								disabled={isLoading}
 							/>
-							{error && <p className="mt-2 text-sm text-red-600">{error}</p>}
+							{error && (
+								<p className="mt-2 text-sm text-destructive">{error}</p>
+							)}
 						</div>
 
 						<button
 							type="submit"
 							disabled={isLoading || !password.trim()}
-							className="w-full bg-gradient-to-br from-indigo-500 to-purple-600 text-white py-3 px-4 rounded-lg font-semibold transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+							className="w-full bg-primary text-primary-foreground py-3 px-4 rounded-lg font-semibold transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
 						>
 							{isLoading ? t("__auth.__verifying") : t("__auth.__enter_system")}
 						</button>
 					</form>
 
 					<div className="mt-6 text-center">
-						<p className="text-sm text-gray-500">
+						<p className="text-sm text-muted-foreground">
 							{t("__auth.__forgot_password")}
 						</p>
 					</div>

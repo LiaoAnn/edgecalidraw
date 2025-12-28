@@ -51,7 +51,7 @@ function Login() {
 	};
 
 	return (
-		<div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-50 to-purple-50">
+		<div className="min-h-screen flex items-center justify-center bg-background">
 			<div className="fixed top-4 right-4 z-10">
 				<LanguageSwitch />
 			</div>
@@ -59,17 +59,19 @@ function Login() {
 			<div className="max-w-md w-full mx-4">
 				<div className="bg-white rounded-2xl shadow-xl p-8">
 					<div className="text-center mb-8">
-						<h1 className="text-4xl font-bold mb-2 bg-gradient-to-br from-indigo-500 to-purple-600 bg-clip-text text-transparent">
+						<h1 className="text-4xl font-bold mb-2 text-foreground">
 							{t("__app.__title")}
 						</h1>
-						<p className="text-gray-600">{t("__auth.__access_prompt")}</p>
+						<p className="text-muted-foreground">
+							{t("__auth.__access_prompt")}
+						</p>
 					</div>
 
 					<form onSubmit={handleSubmit} className="space-y-6">
 						<div>
 							<label
 								htmlFor="password"
-								className="block text-sm font-medium text-gray-700 mb-2"
+								className="block text-sm font-medium text-foreground mb-2"
 							>
 								{t("__auth.__system_password")}
 							</label>
@@ -78,18 +80,20 @@ function Login() {
 								type="password"
 								value={password}
 								onChange={(e) => setPassword(e.target.value)}
-								className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-colors"
+								className="w-full px-4 py-3 border border-input rounded-lg focus:ring-2 focus:ring-ring focus:border-ring outline-none transition-colors"
 								placeholder={t("__auth.__enter_password")}
 								required
 								disabled={isLoading}
 							/>
-							{error && <p className="mt-2 text-sm text-red-600">{error}</p>}
+							{error && (
+								<p className="mt-2 text-sm text-destructive">{error}</p>
+							)}
 						</div>
 
 						<button
 							type="submit"
 							disabled={isLoading}
-							className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold py-3 rounded-lg hover:from-indigo-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+							className="w-full bg-primary text-primary-foreground font-semibold py-3 rounded-lg hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
 						>
 							{isLoading ? t("__auth.__authenticating") : t("__auth.__login")}
 						</button>

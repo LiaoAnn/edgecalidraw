@@ -27,10 +27,10 @@ function LoadingRoom() {
 	const { t } = useTranslation();
 
 	return (
-		<div className="fixed inset-0 bg-gray-100 flex items-center justify-center">
+		<div className="fixed inset-0 bg-muted flex items-center justify-center">
 			<div className="text-center">
-				<div className="animate-spin w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full mx-auto mb-4"></div>
-				<p className="text-gray-600">{t("__error.__loading")}</p>
+				<div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full mx-auto mb-4"></div>
+				<p className="text-muted-foreground">{t("__error.__loading")}</p>
 			</div>
 		</div>
 	);
@@ -128,10 +128,10 @@ function RoomWrapper({
 
 	return (
 		<div className="fixed inset-0 flex flex-col">
-			<div className="flex flex-row justify-between items-center px-4 py-2 bg-white border-b border-gray-200 text-gray-800 text-sm z-10">
+			<div className="flex flex-row justify-between items-center px-4 py-2 bg-background border-b border-border text-foreground text-sm z-10">
 				<div className="flex gap-4">
 					<button
-						className="mr-2 p-1 hover:bg-gray-100 rounded-full transition-colors"
+						className="mr-2 p-1 hover:bg-muted rounded-full transition-colors"
 						onClick={() => navigate({ to: "/" })}
 						title={t("__error.__back_to_home")}
 					>
@@ -144,7 +144,7 @@ function RoomWrapper({
 								{roomData?.name || roomId}
 							</div>
 						</div>
-						<div className="text-[10px] text-gray-500 flex gap-3 leading-none">
+						<div className="text-[10px] text-muted-foreground flex gap-3 leading-none">
 							<span>ID: {roomId}</span>
 							{roomData && (
 								<>
@@ -163,7 +163,7 @@ function RoomWrapper({
 				<div className="flex gap-4">
 					<LanguageSwitch variant="icon" className="ml-auto" />
 					<button
-						className="w-[140px] bg-gray-100 border border-gray-200 rounded px-3 py-1 cursor-pointer relative text-center hover:border-gray-300 transition-colors"
+						className="w-[140px] bg-muted border border-border rounded px-3 py-1 cursor-pointer relative text-center hover:border-input transition-colors"
 						onClick={() => {
 							navigator.clipboard.writeText(window.location.href);
 							setDidCopy(true);
