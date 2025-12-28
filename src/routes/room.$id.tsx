@@ -108,7 +108,7 @@ function RoomWrapper({
 }) {
 	const [didCopy, setDidCopy] = useState(false);
 	const navigate = useNavigate();
-	const { t } = useTranslation();
+	const { t, i18n } = useTranslation();
 
 	useEffect(() => {
 		if (!didCopy) return;
@@ -117,7 +117,7 @@ function RoomWrapper({
 	}, [didCopy]);
 
 	const formatDate = (dateString: string) => {
-		return new Date(dateString).toLocaleString("zh-TW", {
+		return new Date(dateString).toLocaleString(i18n.language, {
 			year: "numeric",
 			month: "short",
 			day: "numeric",

@@ -5,16 +5,16 @@ import { useTranslation } from "react-i18next";
 import CreateRoomModal from "@/components/CreateRoomModal";
 import DeleteConfirmModal from "@/components/DeleteConfirmModal";
 import LanguageSwitch from "@/components/LanguageSwitch";
+import { Logo } from "@/components/Logo";
 import { logout as logoutFn } from "@/server/auth";
 import { createRoom, deleteRoom, getRooms } from "@/server/rooms";
-import { Logo } from "@/components/Logo";
 
 export const Route = createFileRoute("/")({
 	component: HomePage,
 });
 
 function HomePage() {
-	const { t } = useTranslation();
+	const { t, i18n } = useTranslation();
 	const queryClient = useQueryClient();
 	const navigate = useNavigate();
 	const [isModalOpen, setIsModalOpen] = useState(false);
@@ -66,7 +66,7 @@ function HomePage() {
 	}, []);
 
 	const formatDate = (dateString: string) => {
-		return new Date(dateString).toLocaleString("zh-TW", {
+		return new Date(dateString).toLocaleString(i18n.language, {
 			year: "numeric",
 			month: "short",
 			day: "numeric",
@@ -88,12 +88,12 @@ function HomePage() {
 			<div className="max-w-5xl mx-auto">
 				<div className="flex justify-between items-center mb-12">
 					<div>
-					<div className="flex items-center gap-4 mb-2">
-						<Logo className="w-12 h-12" />
-						<h1 className="text-4xl font-extrabold text-foreground tracking-tight">
-							{t("__app.__title")}
-						</h1>
-					</div>
+						<div className="flex items-center gap-4 mb-2">
+							<Logo className="w-12 h-12" />
+							<h1 className="text-4xl font-extrabold text-foreground tracking-tight">
+								{t("__app.__title")}
+							</h1>
+						</div>
 						<p className="text-lg text-muted-foreground">
 							{t("__app.__subtitle")}
 						</p>
