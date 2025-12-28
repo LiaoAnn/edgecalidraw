@@ -46,7 +46,7 @@
 		{
 			"binding": "DB",
 			"database_name": "edgecalidraw-db",
-			"database_id": "6f4480d5-a4b2-49a3-a71d-5cf4de78adb9",
+			"database_id": "05b16a17-3604-4b79-af2f-3acb40c931d2",
 			"migrations_dir": "migrations",
 		}
 	],
