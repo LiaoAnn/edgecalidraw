@@ -10,11 +10,18 @@
     "format": "biome format",
     "lint": "biome lint",
     "check": "biome check",
-    "deploy": "npm run build && wrangler deploy",
+    "deploy": "db:apply --remote && wrangler deploy",
     "db:generate": "drizzle-kit generate",
     "db:apply": "wrangler d1 migrations apply DB",
     "db:studio": "drizzle-kit studio",
     "cf-typegen": "wrangler types --env-interface CloudflareBindings"
+  },
+  "cloudflare": {
+    "bindings": {
+      "SYSTEM_PASSWORD": {
+        "description": "The admin password of this system, required when login"
+      }
+    }
   },
   "dependencies": {
     "@iconify/react": "^6.0.2",
