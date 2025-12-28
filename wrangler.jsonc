@@ -14,6 +14,13 @@
 	"observability": {
 		"enabled": true,
 	},
+	"secrets_store_secrets": [
+		{
+			"binding": "SYSTEM_PASSWORD",
+			"secret_name": "SYSTEM_PASSWORD",
+			"store_id": ""
+		}
+	],
 	"durable_objects": {
 		"bindings": [
 			{
