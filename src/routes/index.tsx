@@ -1,10 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-	createFileRoute,
-	Link,
-	useNavigate,
-	useSearch,
-} from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import CreateRoomModal from "@/components/CreateRoomModal";
@@ -61,8 +56,7 @@ function HomePage() {
 	const logoutMutation = useMutation({
 		mutationFn: () => logoutFn(),
 		onSuccess: () => {
-			const { redirect } = useSearch({ from: "/login" });
-			navigate({ to: redirect });
+			navigate({ to: "/" });
 		},
 	});
 
