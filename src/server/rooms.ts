@@ -2,7 +2,7 @@ import { env } from "cloudflare:workers";
 import { createServerFn } from "@tanstack/react-start";
 import { desc, eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/d1";
-import { room } from "../db/schema";
+import { room } from "@/db/schema";
 
 // 輔助函數：從標題中提取英文部分並生成房間 ID
 function generateRoomId(title: string): string {

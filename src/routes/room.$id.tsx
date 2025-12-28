@@ -9,7 +9,7 @@ import LanguageSwitch from "@/components/LanguageSwitch";
 import RoomNotFound from "@/components/RoomNotFound";
 import { getBookmarkPreview } from "@/lib/getBookmarkPreview";
 import { multiplayerAssetStore } from "@/lib/multiplayerAssetStore";
-import { checkRoomExists, updateRoomActivity } from "../server/rooms";
+import { checkRoomExists, updateRoomActivity } from "@/server/rooms";
 
 export const Route = createFileRoute("/room/$id")({
 	component: TldrawPage,

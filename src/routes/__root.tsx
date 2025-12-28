@@ -7,13 +7,13 @@ import {
 } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 
-import TanStackQueryDevtools from "../integrations/tanstack-query/devtools";
+import TanStackQueryDevtools from "@/integrations/tanstack-query/devtools";
 
 import appCss from "../styles.css?url";
 import "@/i18n";
 
 import type { QueryClient } from "@tanstack/react-query";
-import { getSession } from "../server/auth";
+import { getSession } from "@/server/auth";
 
 interface MyRouterContext {
 	queryClient: QueryClient;

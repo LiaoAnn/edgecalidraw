@@ -5,8 +5,8 @@ import { useTranslation } from "react-i18next";
 import CreateRoomModal from "@/components/CreateRoomModal";
 import DeleteConfirmModal from "@/components/DeleteConfirmModal";
 import LanguageSwitch from "@/components/LanguageSwitch";
-import { logout as logoutFn } from "../server/auth";
-import { createRoom, deleteRoom, getRooms } from "../server/rooms";
+import { logout as logoutFn } from "@/server/auth";
+import { createRoom, deleteRoom, getRooms } from "@/server/rooms";
 
 export const Route = createFileRoute("/")({
 	component: HomePage,
