@@ -5,6 +5,7 @@ import { Tldraw } from "tldraw";
 import "tldraw/tldraw.css";
 import { Icon } from "@iconify/react";
 import { useTranslation } from "react-i18next";
+import LanguageSwitch from "@/components/LanguageSwitch";
 import RoomNotFound from "@/components/RoomNotFound";
 import { getBookmarkPreview } from "@/lib/getBookmarkPreview";
 import { multiplayerAssetStore } from "@/lib/multiplayerAssetStore";
@@ -127,53 +128,58 @@ function RoomWrapper({
 
 	return (
 		<div className="fixed inset-0 flex flex-col">
-			<div className="flex flex-row justify-start items-center px-4 py-2 gap-4 bg-white border-b border-gray-200 text-gray-800 text-sm z-10">
-				<button
-					className="mr-2 p-1 hover:bg-gray-100 rounded-full transition-colors"
-					onClick={() => navigate({ to: "/" })}
-					title={t("__error.__back_to_home")}
-				>
-					<Icon icon="tabler:arrow-left" className="w-5 h-5" />
-				</button>
-				<div className="flex flex-col">
-					<div className="flex items-center gap-2">
-						<WifiIcon />
-						<div className="font-bold text-base">
-							{roomData?.name || roomId}
+			<div className="flex flex-row justify-between items-center px-4 py-2 bg-white border-b border-gray-200 text-gray-800 text-sm z-10">
+				<div className="flex gap-4">
+					<button
+						className="mr-2 p-1 hover:bg-gray-100 rounded-full transition-colors"
+						onClick={() => navigate({ to: "/" })}
+						title={t("__error.__back_to_home")}
+					>
+						<Icon icon="tabler:arrow-left" className="w-5 h-5" />
+					</button>
+					<div className="flex flex-col">
+						<div className="flex items-center gap-2">
+							<WifiIcon />
+							<div className="font-bold text-base">
+								{roomData?.name || roomId}
+							</div>
 						</div>
-					</div>
-					<div className="text-[10px] text-gray-500 flex gap-3 leading-none">
-						<span>ID: {roomId}</span>
-						{roomData && (
-							<>
-								<span>
-									{t("__room.__created_at")}: {formatDate(roomData.createdAt)}
-								</span>
-								<span>
-									{t("__room.__last_activity")}:{" "}
-									{formatDate(roomData.lastActivity)}
-								</span>
-							</>
-						)}
+						<div className="text-[10px] text-gray-500 flex gap-3 leading-none">
+							<span>ID: {roomId}</span>
+							{roomData && (
+								<>
+									<span>
+										{t("__room.__created_at")}: {formatDate(roomData.createdAt)}
+									</span>
+									<span>
+										{t("__room.__last_activity")}:{" "}
+										{formatDate(roomData.lastActivity)}
+									</span>
+								</>
+							)}
+						</div>
 					</div>
 				</div>
-				<button
-					className="ml-auto bg-gray-100 border border-gray-200 rounded px-3 py-1 h-7 cursor-pointer relative text-center hover:border-gray-300 transition-colors"
-					onClick={() => {
-						navigator.clipboard.writeText(window.location.href);
-						setDidCopy(true);
-					}}
-					aria-label="copy room link"
-				>
-					<span className={didCopy ? "invisible" : ""}>
-						{t("__error.__copy_link") || "Copy link"}
-					</span>
-					{didCopy && (
-						<div className="absolute inset-0 flex items-center justify-center">
-							{t("__error.__copied") || "Copied!"}
-						</div>
-					)}
-				</button>
+				<div className="flex gap-4">
+					<LanguageSwitch variant="icon" className="ml-auto" />
+					<button
+						className="w-[140px] bg-gray-100 border border-gray-200 rounded px-3 py-1 cursor-pointer relative text-center hover:border-gray-300 transition-colors"
+						onClick={() => {
+							navigator.clipboard.writeText(window.location.href);
+							setDidCopy(true);
+						}}
+						aria-label="copy room link"
+					>
+						<span className={didCopy ? "invisible" : ""}>
+							{t("__error.__copy_link") || "Copy link"}
+						</span>
+						{didCopy && (
+							<div className="absolute inset-0 flex items-center justify-center">
+								{t("__error.__copied") || "Copied!"}
+							</div>
+						)}
+					</button>
+				</div>
 			</div>
 			<div className="relative flex-1">{children}</div>
 		</div>
