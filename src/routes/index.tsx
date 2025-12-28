@@ -7,6 +7,7 @@ import DeleteConfirmModal from "@/components/DeleteConfirmModal";
 import LanguageSwitch from "@/components/LanguageSwitch";
 import { logout as logoutFn } from "@/server/auth";
 import { createRoom, deleteRoom, getRooms } from "@/server/rooms";
+import { Logo } from "@/components/Logo";
 
 export const Route = createFileRoute("/")({
 	component: HomePage,
@@ -87,9 +88,12 @@ function HomePage() {
 			<div className="max-w-5xl mx-auto">
 				<div className="flex justify-between items-center mb-12">
 					<div>
-						<h1 className="text-4xl font-extrabold text-foreground tracking-tight mb-2">
+					<div className="flex items-center gap-4 mb-2">
+						<Logo className="w-12 h-12" />
+						<h1 className="text-4xl font-extrabold text-foreground tracking-tight">
 							{t("__app.__title")}
 						</h1>
+					</div>
 						<p className="text-lg text-muted-foreground">
 							{t("__app.__subtitle")}
 						</p>

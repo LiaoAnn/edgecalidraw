@@ -1,0 +1,91 @@
+import type { SVGProps } from "react";
+
+export function Logo(props: SVGProps<SVGSVGElement>) {
+	return (
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			viewBox="0 0 512 512"
+			fill="none"
+			{...props}
+		>
+			<defs>
+				<linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+					<stop offset="0%" style={{ stopColor: "#18181b" }} />
+					<stop offset="100%" style={{ stopColor: "#3f3f46" }} />
+				</linearGradient>
+				<linearGradient id="canvasGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+					<stop offset="0%" style={{ stopColor: "#f4f4f5" }} />
+					<stop offset="100%" style={{ stopColor: "#e4e4e7" }} />
+				</linearGradient>
+				<linearGradient id="pencilGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+					<stop offset="0%" style={{ stopColor: "#71717a" }} />
+					<stop offset="100%" style={{ stopColor: "#52525b" }} />
+				</linearGradient>
+			</defs>
+
+			{/* Background circle */}
+			<circle cx="256" cy="256" r="240" fill="url(#bgGradient)" />
+
+			{/* Canvas/Whiteboard with subtle shadow */}
+			<rect
+				x="90"
+				y="100"
+				width="240"
+				height="190"
+				rx="14"
+				fill="#d4d4d8"
+				opacity="0.5"
+				transform="translate(6, 6)"
+			/>
+			<rect
+				x="90"
+				y="100"
+				width="240"
+				height="190"
+				rx="14"
+				fill="url(#canvasGradient)"
+				stroke="#d4d4d8"
+				strokeWidth="3"
+			/>
+
+			{/* Drawing strokes on canvas - more artistic */}
+			<path
+				d="M130 180 Q 185 130, 240 180 T 300 180"
+				stroke="#18181b"
+				strokeWidth="7"
+				strokeLinecap="round"
+				fill="none"
+			/>
+			<circle cx="155" cy="230" r="22" fill="#71717a" opacity="0.7" />
+			<rect
+				x="210"
+				y="210"
+				width="70"
+				height="45"
+				rx="8"
+				fill="#a1a1aa"
+				opacity="0.6"
+			/>
+
+			{/* Pencil tool - repositioned */}
+			<g transform="translate(270, 250) rotate(45)">
+				{/* Pencil body */}
+				<rect
+					x="0"
+					y="0"
+					width="130"
+					height="30"
+					rx="4"
+					fill="url(#pencilGradient)"
+				/>
+				{/* Pencil tip */}
+				<polygon points="130,0 165,15 130,30" fill="#fafafa" />
+				<polygon points="152,7 165,15 152,23" fill="#18181b" />
+				{/* Pencil eraser */}
+				<rect x="-12" y="0" width="16" height="30" rx="3" fill="#ef4444" />
+			</g>
+		</svg>
+	);
+}
+
+export default Logo;

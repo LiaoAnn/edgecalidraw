@@ -44,8 +44,17 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 			{
 				title: "Edgecalidraw",
 			},
+			{
+				name: "description",
+				content: "A real-time collaborative whiteboard powered by tldraw and Cloudflare Durable Objects. Create, share, and collaborate on drawings with multiple users simultaneously.",
+			},
 		],
 		links: [
+			{
+				rel: "icon",
+				type: "image/svg+xml",
+				href: "/icon.svg",
+			},
 			{
 				rel: "stylesheet",
 				href: appCss,

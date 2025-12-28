@@ -1,5 +1,6 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { Trans, useTranslation } from "react-i18next";
+import { Logo } from "@/components/Logo";
 
 interface RoomNotFoundProps {
 	roomId: string;
@@ -14,9 +15,12 @@ function RoomNotFound({ roomId }: RoomNotFoundProps) {
 			<div className="bg-card rounded-lg shadow-lg p-8 max-w-md w-full mx-4">
 				<div className="text-center">
 					<div className="text-6xl mb-4">🚫</div>
-					<h2 className="text-2xl font-bold text-foreground mb-4">
-						{t("__error.__room_not_found")}
-					</h2>
+					<div className="flex flex-col items-center mb-6">
+						<Logo className="w-16 h-16 mb-4 opacity-50 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-500" />
+						<h2 className="text-2xl font-bold text-foreground">
+							{t("__error.__room_not_found")}
+						</h2>
+					</div>
 					<p className="text-muted-foreground mb-6">
 						<Trans
 							i18nKey="__error.__room_not_found_message"

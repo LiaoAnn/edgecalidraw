@@ -2,6 +2,7 @@ import { useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import LanguageSwitch from "@/components/LanguageSwitch";
+import { Logo } from "@/components/Logo";
 
 const PasswordScreen = () => {
 	const { t } = useTranslation();
@@ -24,7 +25,10 @@ const PasswordScreen = () => {
 				body: JSON.stringify({ password }),
 			});
 
-			const data = await response.json();
+			const data = (await response.json()) as {
+				success: boolean;
+				token: string;
+			};
 
 			if (data.success) {
 				// 儲存 token 到 localStorage
@@ -70,9 +74,12 @@ const PasswordScreen = () => {
 			<div className="max-w-md w-full mx-4">
 				<div className="bg-white rounded-2xl shadow-xl p-8">
 					<div className="text-center mb-8">
-						<h1 className="text-4xl font-bold mb-2 text-foreground">
-							{t("__app.__title")}
-						</h1>
+						<div className="flex flex-col items-center mb-4">
+							<Logo className="w-20 h-20 mb-4" />
+							<h1 className="text-4xl font-bold text-foreground">
+								{t("__app.__title")}
+							</h1>
+						</div>
 						<p className="text-muted-foreground">
 							{t("__auth.__access_prompt")}
 						</p>

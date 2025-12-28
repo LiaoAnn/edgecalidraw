@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import LanguageSwitch from "@/components/LanguageSwitch";
 import { login } from "@/server/auth";
+import { Logo } from "@/components/Logo";
 
 export const Route = createFileRoute("/login")({
 	component: Login,
@@ -59,9 +60,12 @@ function Login() {
 			<div className="max-w-md w-full mx-4">
 				<div className="bg-white rounded-2xl shadow-xl p-8">
 					<div className="text-center mb-8">
-						<h1 className="text-4xl font-bold mb-2 text-foreground">
-							{t("__app.__title")}
-						</h1>
+						<div className="flex flex-col items-center mb-4">
+							<Logo className="w-20 h-20 mb-4" />
+							<h1 className="text-4xl font-bold text-foreground">
+								{t("__app.__title")}
+							</h1>
+						</div>
 						<p className="text-muted-foreground">
 							{t("__auth.__access_prompt")}
 						</p>
