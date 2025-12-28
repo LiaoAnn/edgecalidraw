@@ -31,11 +31,9 @@
 	},
 	"__home": {
 		"__all_canvases": "所有畫布",
-		"__created_at": "建立時間",
 		"__create_first_canvas": "點擊上方按鈕建立你的第一個畫布！",
 		"__create_new_canvas": "建立新畫布",
 		"__delete_canvas": "刪除畫布",
-		"__last_activity": "最後活動",
 		"__no_canvases": "目前沒有任何畫布"
 	},
 	"__room": {

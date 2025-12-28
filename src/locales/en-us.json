@@ -31,11 +31,9 @@
 	},
 	"__home": {
 		"__all_canvases": "All Canvases",
-		"__created_at": "Created at",
 		"__create_first_canvas": "Click the button above to create your first canvas!",
 		"__create_new_canvas": "Create New Canvas",
 		"__delete_canvas": "Delete Canvas",
-		"__last_activity": "Last activity",
 		"__no_canvases": "No canvases yet"
 	},
 	"__room": {
