@@ -52,8 +52,7 @@ You can remove the `mounts` section in `.devcontainer/devcontainer.json` file, a
 
 There are still some features to be implemented, such as:
 
-- [x] Real-time laser pointer when collaborating
-- [x] Real-time screen following
-- [ ] Language switching on whiteboard
 - [ ] Change the user name
 - [ ] Change the room name
+- [ ] Sync website language with tldraw language
+- [ ] Better editor layout
